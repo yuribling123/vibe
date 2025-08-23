@@ -1,13 +1,15 @@
 import Image from "next/image";
 import prisma from "@/lib/db";
-export default function Home() {
-  const users = prisma.user.findMany();
-  // findmany means find all users
+
+
+const Home =  async () => {
+  const users = await prisma.user.findMany();
   return (
-    <div> 
-      {JSON.stringify(users,null,2)}
-      //
-   
+    <div>
+      {JSON.stringify(users, null, 2)}
     </div>
   );
 }
+// aync because it waits for the database query to finish
+
+export default Home;
