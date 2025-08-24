@@ -1,12 +1,12 @@
 import Image from "next/image";
-import prisma from "@/lib/db";
+
 
 
 const Home =  async () => {
-  const users = await prisma.user.findMany();
+  
   return (
     <div>
-      {JSON.stringify(users, null, 2)}
+      hello world 
     </div>
   );
 }
