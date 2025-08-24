@@ -26,6 +26,3 @@ datasource db {
 //   title String
 //   content String?
 //   published Boolean @default(false)
-//   authorId Int
-//   author User @relation(fields: [authorId], references: [id], onDelete: Cascade )
-// }
