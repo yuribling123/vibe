@@ -1,5 +1,6 @@
 import { initTRPC } from '@trpc/server';
 import { cache } from 'react';
+import superjson from 'superjson';
 
 export const createTrpcContext = cache( async() => {
 
@@ -10,7 +11,11 @@ export const createTrpcContext = cache( async() => {
  * Initialization of tRPC backend
  * Should be done only once per backend!
  */
-const t = initTRPC.create();
+const t = initTRPC.create(
+    {
+        transformer: superjson, // optional - adds superjson serialization
+    }
+);
  
 /**
  * Export reusable router and procedure helpers
@@ -19,3 +24,4 @@ const t = initTRPC.create();
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory
 export const baseProcedure = t.procedure;
+ 
