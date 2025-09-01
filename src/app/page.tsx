@@ -4,7 +4,7 @@ import Image from "next/image";
 
 
 
-const Home =  async () => {
+const Home = () => {
   const trpc = useTRPC();
   trpc.hello .queryOptions({text:"hello"})
   
