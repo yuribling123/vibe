@@ -18,5 +18,6 @@ const Home = () => {
   ); 
 }
 // aync because it waits for the database query to finish
+//
 
 export default Home;
