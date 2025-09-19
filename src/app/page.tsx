@@ -1,12 +1,15 @@
 "use client"
 import { useTRPC } from "@/trpc/client";
+import { getQueryClient } from "@/trpc/server";
 import Image from "next/image";
 
 
 
 const Home = () => {
-  const trpc = useTRPC();
-  trpc.hello .queryOptions({text:"hello"})
+  // const trpc = useTRPC();
+  // trpc.hello .queryOptions({text:"hello"})
+  const queryClient = getQueryClient
+  
   
   return (
     <div>
@@ -15,5 +18,8 @@ const Home = () => {
   ); 
 }
 // aync because it waits for the database query to finish
+//
 
 export default Home;
+
+// 123 666
