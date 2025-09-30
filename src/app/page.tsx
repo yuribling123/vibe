@@ -8,6 +8,7 @@ import Image from "next/image";
 const Home = () => {
   // const trpc = useTRPC();
   // trpc.hello .queryOptions({text:"hello"})
+  // mainx
   const queryClient = getQueryClient
   
   
