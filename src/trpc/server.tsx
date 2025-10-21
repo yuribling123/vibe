@@ -13,4 +13,7 @@ export const trpc = createTRPCOptionsProxy({
   router: appRouter,
   queryClient: getQueryClient,
 });
-   
+
+export const caller = appRouter.createCaller(createTrpcContext);
+// directly call database queries on the server   
+    

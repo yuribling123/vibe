@@ -1,26 +1,15 @@
-"use client"
-import { useTRPC } from "@/trpc/client";
-import { getQueryClient } from "@/trpc/server";
-import Image from "next/image";
+import { getQueryClient, trpc } from "@/trpc/server";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
+const Page = async () => {
+  const queryClient = getQueryClient();
+  void queryClient.prefetchQuery(trpc.hello.queryOptions({ text: "Antonio PREFETCH" }));
 
-
-const Home = () => {
-  // const trpc = useTRPC();
-  // trpc.hello .queryOptions({text:"hello"})
-  // mainx
-  const queryClient = getQueryClient
-  
-  
   return (
-    <div>
-      hello world 
-    </div>  
-  ); 
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      {/* <Client />  // Cannot find name 'Client'. */}
+    </HydrationBoundary>
+  );
 }
-// aync because it waits for the database query to finish
-//
 
-export default Home;
-
-// 123 666
+export default Page;
