@@ -5,12 +5,12 @@ import { useTRPC } from "@/trpc/client";
 
    const Client = () => {
     const trpc = useTRPC();
-    // const {data} = useSuspenseQueries(trpc.createAI.queryOptions({text:"Antonio Prefetch"}) )
+    // const {data} = useSuspenseQueries(trpc.hello.queryOptions({text:"Antonio Prefetch"}) )
     return (
-     <div>
+     <div> 
       {/* {JSON.stringify(data)} */}
-     </div>
+     </div>  
     )
    }  
     
-   export default Client;  
+   export default Client;    
