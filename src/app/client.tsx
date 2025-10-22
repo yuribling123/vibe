@@ -1,16 +1,18 @@
-  "useclient";
+"use client";
+import { useTRPC } from "@/trpc/client";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { useSuspenseQueries } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";    
+export const Client = () => {
+  const trpc = useTRPC();
+  const { data } = useSuspenseQuery(
+    trpc.createAI.queryOptions({ text: 123 })
+  );
 
-   const Client = () => {
-    const trpc = useTRPC();
-    // const {data} = useSuspenseQueries(trpc.hello.queryOptions({text:"Antonio Prefetch"}) )
-    return (
-     <div> 
-      {/* {JSON.stringify(data)} */}
-     </div>  
-    )
-   }  
+  return (
+    <div>
+      {JSON.stringify(data)}
+    </div>
+  );
+};
+
     
-   export default Client;    
