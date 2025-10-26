@@ -6,7 +6,7 @@ import { text } from "stream/consumers";
 import { Client } from "./client";
 import { Suspense } from "react";
 // the moment sever component load, client will prefetch the data 
-// back ground job
+// back ground job 1
 const Page = async () => {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.createAI.queryOptions({ text: 123 }));
