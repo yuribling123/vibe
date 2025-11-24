@@ -15,8 +15,9 @@ export const appRouter = createTRPCRouter({
           data:{
             email: input.text,
           }
-        }
+        } 
       )
+      return {ok:"success"}
      }),
   createAI: baseProcedure
     .input(
