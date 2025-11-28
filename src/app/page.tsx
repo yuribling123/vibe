@@ -7,6 +7,8 @@ import { toast } from "sonner";
 
 const Page = () => {
 
+  //   create open ai key
+
   const trpc = useTRPC();
   const invoke = useMutation(trpc.invoke.mutationOptions({
     onSuccess() {
