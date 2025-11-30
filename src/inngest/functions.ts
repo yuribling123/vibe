@@ -6,9 +6,9 @@ export const helloWorld = inngest.createFunction(
   async ({ event, step }) => {
 
     // download step
-    await step.sleep("wait-a-moment", "30s");
-
+    await step.sleep("wait-a-moment", "5s");
+ 
     //  
-    return { message: `Hello ${event.data.email}!` };
+    return { message: `Hello ${event.data.value}!` };
   },
-);
+); 

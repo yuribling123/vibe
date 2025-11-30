@@ -23,9 +23,9 @@ const Page = () => {
  
   return (  
    <div className="p-4 max-w-7xl mx-auto" >
-    <Input></Input>
-     <Button disabled={invoke.isPending}  onClick={()=> invoke.mutate({text:"John "} )}>
-      Invoke Background Job
+    <Input value = {value} onChange={(e)=> setValue(e.target.value)}></Input>
+     <Button disabled={invoke.isPending}  onClick={()=> invoke.mutate({value:value} )}>
+      Invoke Background J ob
      </Button>
 
    </div>
