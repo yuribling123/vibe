@@ -9,12 +9,12 @@ export const helloWorld = inngest.createFunction(
 
     const summarizer = createAgent({
       name: "summarizer",
-      system:"you are an expert summari zer. You summarize in two words",
+      system:"you are an expert Next JS developer. You write readable maintable code, You write simple Next JS and React Snippets.",
       model: openai({model:"gpt-4o"}),
     });
     
     const {output} =  await summarizer.run(
-      `Summarize the following text : ${event.data.value}`
+      `Write the Following Snippet : ${event.data.value}`
     )
   
     console.log(output)
