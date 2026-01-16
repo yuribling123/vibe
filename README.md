@@ -13,3 +13,5 @@ npm run dev
 ```bash
 npx inngest-cli@latest dev
 ```
+
+## update
