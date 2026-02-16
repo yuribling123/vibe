@@ -3,15 +3,15 @@ import { baseProcedure, createTRPCRouter } from '../init';
 import { inngest } from '@/inngest/client';
 export const appRouter = createTRPCRouter({
   invoke: baseProcedure
-     .input(
+     .input( // validate input type
       z.object({
         value: z.string(),
       }), 
      )
-     .mutation(async({input}) => {
+     .mutation(async({input}) => { // action to perform
       await inngest.send(
         {
-          name: "test/hello.world",
+          name: "test/hello.world", // event key trigger the inggest function
           data:{
             value: input.value,
           } 
@@ -19,7 +19,7 @@ export const appRouter = createTRPCRouter({
       )
       return {ok:"success"}
      }),
-  createAI: baseProcedure
+  createAI: baseProcedure //name of api endpoint
     .input(
       z.object({
         text: z.number(),
