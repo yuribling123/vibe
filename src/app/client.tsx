@@ -6,7 +6,7 @@ import { useEffect } from "react";
 export const Client = () => {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(
-    trpc.createAI.queryOptions({ text: 123  })
+    trpc.createAI.queryOptions({ text: 123  }) // tells react how query backend function createAI
   );
 
   useEffect(() => {}, []); 

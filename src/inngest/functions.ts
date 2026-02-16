@@ -6,6 +6,7 @@ export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },
   async ({ event }) => {
+    console.log(process.env.OPENAI_API_KEY);
 
     const summarizer = createAgent({
       name: "summarizer",
