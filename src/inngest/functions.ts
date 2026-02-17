@@ -6,7 +6,6 @@ export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },
   async ({ event }) => {
-    console.log(process.env.OPENAI_API_KEY);
 
     const summarizer = createAgent({
       name: "summarizer",
@@ -25,13 +24,10 @@ export const helloWorld = inngest.createFunction(
 
     // If you want to add a delay or perform other steps, you can do so here
   
-    
-
-
     // download step
     // await step.sleep("wait-a-moment", "5s");
  
     //  
-    return { output};
+    return {output};
   },
 ); 
