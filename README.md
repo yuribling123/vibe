@@ -17,3 +17,12 @@ npx inngest-cli@latest dev
 ## update
 use ingest to create ai agent instance
 use TRPC as the bridge to safe type call backend functions from frontend
+
+
+React (client)
+   ↓
+tRPC mutation  → small backend handler
+   ↓
+inngest.send() → triggers background function
+                     ↓
+                 AI runs here
