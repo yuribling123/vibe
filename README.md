@@ -17,6 +17,7 @@ npx inngest-cli@latest dev
 ## update
 use ingest to create ai agent instance
 use TRPC as the bridge to safe type call backend functions from frontend
+use e2b to create container 
 
 
 React (client)
