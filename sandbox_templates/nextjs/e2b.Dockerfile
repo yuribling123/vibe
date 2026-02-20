@@ -1,18 +1,21 @@
+# You can use most Debian based base images
 FROM node:21-slim
 
+# Install curl
 RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /home/user/app
-
 COPY compile_page.sh /compile_page.sh
-RUN chmod +x /compile_page.sh
+RUN chmod +x /compile_page.sh  # give execute permissions to the script
 
-# Create Next.js app
-RUN npx --yes create-next-app@15.3.3 . --yes
+# Install dependencies and customize sandbox
+WORKDIR /home/user/nextjs-app
 
-# Install shadcn
+RUN npx --yes create-next-app@15.3.4 . --yes
+
 RUN npx --yes shadcn@2.6.3 init --yes -b neutral --force
 RUN npx --yes shadcn@2.6.3 add --all --yes
+# 4️⃣ 🔥 Install the NEW deps that shadcn added
+RUN npm install tw-animate-css && npm install
 
-# 🔑 Ensure dependencies are properly installed
-RUN npm install
+# Move the Nextjs app to the home directory and remove the nextjs-app directory
+RUN mv /home/user/nextjs-app/* /home/user/ && rm -rf /home/user/nextjs-app

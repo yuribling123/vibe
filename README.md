@@ -17,7 +17,10 @@ npx inngest-cli@latest dev
 ## update
 use ingest to create ai agent instance
 use TRPC as the bridge to safe type call backend functions from frontend
-use e2b to create container 
+use e2b to build template envirornment for container 
+```
+e2b template build --name vibe-nextjs-test-2 --cmd "/compile_page.sh"
+```
 
 
 React (client)
