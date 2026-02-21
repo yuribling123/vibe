@@ -19,10 +19,42 @@ export const helloWorld = inngest.createFunction(
 
     // Create an agent with a system prompt and a model
     const codeAgent = createAgent({
+
       name: "code-agent",
       system: "you are an expert Next JS developer. You write readable maintable code, You write simple Next JS and React Snippets.",
       model: openai({ model: "gpt-4o" }),
-      tools:[createTool({name:"Terminal",description:"Use the terminal to run commands",parameters:z.object({command:z.string()}),handler:async(input)=>{return`Executed: ${input.command}`}})]
+      // terminal tool, read file tool, write file tool 
+      tools: [
+        // Terminal tool to run commands in the sandbox
+        createTool({ name: "Terminal", description: "Use the terminal to run commands", parameters: z.object({ command: z.string() }), handler: async (input) => { return `Executed: ${input.command}` } }),
+        // Read file tool to read files from the sandbox
+        createTool({
+          name: "readFiles",
+          description: "Read files from the sandbox",
+          parameters: z.object({
+            files: z.array(z.string()),
+          }),
+          handler: async ({ files }, { step }) => {
+            return await step?.run("readFiles", async () => {
+              try {
+                const sandbox = await getSandbox(sandboxId);
+                const contents = [];
+                for (const file of files) {
+                  const content = await sandbox.files.read(file);
+                  contents.push({ path: file, content: content });
+                }
+                return JSON.stringify(contents);
+              }
+              catch (e) {
+                return "error: " + e;
+              }
+            });
+          },
+        })
+
+
+      ]
+
     });
 
 
