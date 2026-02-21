@@ -41,17 +41,6 @@ export const helloWorld = inngest.createFunction(
       return `https://${host}`;
     });
 
-
-    // You can use the output in any way you want, such as saving it to a database or returning it in the response
-    // For example, you could return the output as part of the response:
-    // return { output };
-
-    // If you want to add a delay or perform other steps, you can do so here
-
-    // download step
-    // await step.sleep("wait-a-moment", "5s");
-
-    //  
     return { output, sandboxUrl };
   },
 ); 
