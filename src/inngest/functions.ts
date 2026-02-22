@@ -27,6 +27,34 @@ export const helloWorld = inngest.createFunction(
       tools: [
         // Terminal tool to run commands in the sandbox
         createTool({ name: "Terminal", description: "Use the terminal to run commands", parameters: z.object({ command: z.string() }), handler: async (input) => { return `Executed: ${input.command}` } }),
+
+        // Create or update file tool to create or update files in the sandbox
+        createTool({
+          name: "createOrUpdateFile",
+          description: "Create or update files in the sandbox",
+          parameters: z.object({
+            files: z.array(z.object({path: z.string(), content: z.string()})),
+          }),
+          handler: async ({ files }, { step,network}) => {
+            const newFiles = await step?.run("createOrUpdateFiles", async () => {
+              try {
+                const updatedFiles = network.state.data.files ||{};
+                const sandbox = await getSandbox(sandboxId);
+                for (const file of files) {
+                  await sandbox.files.write(file.path, file.content);
+                  updatedFiles[file.path] = file.content;
+                }
+                return updatedFiles;
+                
+              } catch (e) {
+                return "error:" + e;
+              }
+            });
+            if (typeof newFiles==="object"){
+              network.state.data.files = newFiles;
+            }
+          },
+        }),
         // Read file tool to read files from the sandbox
         createTool({
           name: "readFiles",
