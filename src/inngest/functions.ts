@@ -5,6 +5,7 @@ import { Sandbox } from "@e2b/code-interpreter";
 import { getSandbox } from "./utils"
 import { de } from "date-fns/locale";
 import { z } from "zod";
+import { stdout } from "process";
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -25,32 +26,57 @@ export const helloWorld = inngest.createFunction(
       model: openai({ model: "gpt-4o" }),
       // terminal tool, read file tool, write file tool 
       tools: [
+        
         // Terminal tool to run commands in the sandbox
-        createTool({ name: "Terminal", description: "Use the terminal to run commands", parameters: z.object({ command: z.string() }), handler: async (input) => { return `Executed: ${input.command}` } }),
+        createTool({
+          name: "Terminal",
+          description: "Use the terminal to run commands",
+          parameters: z.object({ command: z.string() }),
+          handler: async ({ command }, { step }) => { 
+            return await step?.run("terminal",async()=>{
+              const buffers = {stdout: "", stderr: ""};
+              try {
+                const sandbox = await getSandbox(sandboxId);
+                const result = await sandbox.commands.run(command,{
+                  onStdout: (data:string) => {
+                    buffers.stdout += data;
+                  },
+                  onStderr: (data:string) => {
+                    buffers.stderr += data;
+                  }
+                });
+                return result.stdout;}
+                catch(e){
+                  console.error(`command failed: ${e} \n stdout: ${buffers.stdout} \n stderr: ${buffers.stderr}`);
+                }
+            })
+           }
+
+        }),
 
         // Create or update file tool to create or update files in the sandbox
         createTool({
           name: "createOrUpdateFile",
           description: "Create or update files in the sandbox",
           parameters: z.object({
-            files: z.array(z.object({path: z.string(), content: z.string()})),
+            files: z.array(z.object({ path: z.string(), content: z.string() })),
           }),
-          handler: async ({ files }, { step,network}) => {
+          handler: async ({ files }, { step, network }) => {
             const newFiles = await step?.run("createOrUpdateFiles", async () => {
               try {
-                const updatedFiles = network.state.data.files ||{};
+                const updatedFiles = network.state.data.files || {};
                 const sandbox = await getSandbox(sandboxId);
                 for (const file of files) {
                   await sandbox.files.write(file.path, file.content);
                   updatedFiles[file.path] = file.content;
                 }
                 return updatedFiles;
-                
+
               } catch (e) {
                 return "error:" + e;
               }
             });
-            if (typeof newFiles==="object"){
+            if (typeof newFiles === "object") {
               network.state.data.files = newFiles;
             }
           },
