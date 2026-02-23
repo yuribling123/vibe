@@ -8,7 +8,7 @@
  * Triggered by the Inngest event: " 
  */
 import { inngest } from "./client";
-import { Agent, openai, createAgent, createTool } from "@inngest/agent-kit";
+import { Agent, openai, createAgent, createTool, createNetwork } from "@inngest/agent-kit";
 import { Sandbox } from "@e2b/code-interpreter";
 import { getSandbox, lastAssistantTextMessageContent } from "./utils"
 import { z } from "zod";
@@ -32,11 +32,9 @@ export const helloWorld = inngest.createFunction(
       description: "an expert coding",
       system: PROMPT,
       model: openai({
-        model: "gpt-4.1 ",
+        model: "gpt-5.2",
         defaultParameters: {
           temperature: 0.1,
-
-
         }
       }),
       // terminal tool, read file tool, write file tool 
@@ -136,12 +134,18 @@ export const helloWorld = inngest.createFunction(
 
     });
 
-
-    // Run the code agent with the input prompt and get the output
-    const { output } = await codeAgent.run(
-      `Write the Following Snippet : ${event.data.value}`
+    const network = createNetwork(
+      {
+        name: "coding-agent-network",
+        agents: [codeAgent],
+        maxIter: 9,
+        router: async ({ network }) => { const summary = network.state.data.summary; if (summary) { return } return codeAgent }
+      }
     )
 
+
+    // Run the code agent with the input prompt and get the output
+    const result = await network.run(event.data.value);
 
     // Get the sandbox URL 
     const sandboxUrl = await step.run("get-sandbox-url", async () => {
@@ -152,6 +156,6 @@ export const helloWorld = inngest.createFunction(
       return `https://${host}`;
     });
 
-    return { output, sandboxUrl };
+    return { result, sandboxUrl };
   },
 ); 
