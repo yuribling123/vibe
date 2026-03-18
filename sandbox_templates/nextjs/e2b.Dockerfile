@@ -12,10 +12,10 @@ WORKDIR /home/user/nextjs-app
 
 RUN npx --yes create-next-app@15.3.4 . --yes
 
-RUN npx --yes shadcn@2.6.3 init --yes -b neutral --force
-RUN npx --yes shadcn@2.6.3 add --all --yes
-# 4️⃣ 🔥 Install the NEW deps that shadcn added
-RUN npm install tw-animate-css && npm install
+# RUN npx --yes shadcn@2.6.3 init --yes -b neutral --force
+# RUN npx --yes shadcn@2.6.3 add --all --yes
+# # 4️⃣ 🔥 Install the NEW deps that shadcn added
+# RUN npm install tw-animate-css && npm install
 
 # Move the Nextjs app to the home directory and remove the nextjs-app directory
 RUN mv /home/user/nextjs-app/* /home/user/ && rm -rf /home/user/nextjs-app

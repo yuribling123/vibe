@@ -30,3 +30,6 @@ tRPC mutation  → small backend handler
 inngest.send() → triggers background function
                      ↓
                  AI runs here
+
+### note 
+Background jobs let user run slow AI work without blocking the user request.
