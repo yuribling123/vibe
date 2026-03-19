@@ -14,6 +14,9 @@ npm run dev
 npx inngest-cli@latest dev
 ```
 
+## Run database studio
+npx prisma studio
+
 ## update
 use ingest to create ai agent instance
 use TRPC as the bridge to safe type call backend functions from frontend
