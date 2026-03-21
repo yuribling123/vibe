@@ -8,26 +8,25 @@ import { toast } from "sonner";
 
 const Page = () => {
 
-  //   create open ai key
+  // create open ai key
   const [value,setValue] = useState("")
     
 
   const trpc = useTRPC();
-  const invoke = useMutation(trpc.invoke.mutationOptions({
+  const createMessage = useMutation(trpc.messages.create.mutationOptions({
     onSuccess() {
-      toast.success("Background job invoked!");
+      toast.success("Message created!"); 
     } 
   }));
-
+ 
 
  
   return (  
    <div className="p-4 max-w-7xl mx-auto" >
     <Input value = {value} onChange={(e)=> setValue(e.target.value)}></Input>
-     <Button disabled={invoke.isPending}  onClick={()=> invoke.mutate({value:value} )}>
+     <Button disabled={createMessage.isPending}  onClick={()=> createMessage.mutate({value:value})}>
       Invoke Background Job
      </Button>
-
    </div>
   
   );
