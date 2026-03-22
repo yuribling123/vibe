@@ -14,10 +14,11 @@ import { getSandbox, lastAssistantTextMessageContent } from "./utils"
 import { z } from "zod";
 import { PROMPT } from "@/prompt";
 import prisma from "@/lib/db";
+import { is } from "date-fns/locale";
 
-export const helloWorld = inngest.createFunction(
-  { id: "hello-world" },
-  { event: "test/hello.world" },
+export const codeAgent = inngest.createFunction(
+  { id: "code-agent" },
+  { event: "code-agent/run" },
   async ({ event, step }) => {
 
     // Get sandbox id from e2b
@@ -147,6 +148,8 @@ export const helloWorld = inngest.createFunction(
 
     // Run the code agent with the input prompt and get the output
     const result = await network.run(event.data.value);
+    const isError = !result.state.data.summary || Object.keys(result.state.data.files || {}).length === 0;
+
 
     // Get the sandbox URL 
     const sandboxUrl = await step.run("get-sandbox-url", async () => {
@@ -158,6 +161,15 @@ export const helloWorld = inngest.createFunction(
     });
     // save sandox url and the result to the database
     await step.run("save-result", async () => {
+      if (isError){
+        return await prisma.message.create({
+          data: {
+            content: "Error occurred while processing the request.",
+            role: "ASSISTANT",
+            type: "ERROR"
+          }
+        });
+      }
       // Here you can save the result to a database or do something else with it
       return await prisma.message.create({
         data: {
