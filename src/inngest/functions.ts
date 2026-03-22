@@ -8,15 +8,19 @@
  * Triggered by the Inngest event: " 
  */
 import { inngest } from "./client";
-import { Agent, openai, createAgent, createTool, createNetwork } from "@inngest/agent-kit";
+import { Agent, openai, createAgent, createTool, createNetwork, Tool } from "@inngest/agent-kit";
 import { Sandbox } from "@e2b/code-interpreter";
 import { getSandbox, lastAssistantTextMessageContent } from "./utils"
 import { z } from "zod";
 import { PROMPT } from "@/prompt";
 import prisma from "@/lib/db";
 import { is } from "date-fns/locale";
+interface AgentState{
+  summary:string;
+  files:{[path:string]:string}
+} 
 
-export const codeAgent = inngest.createFunction(
+export const codeAgentFunction = inngest.createFunction(
   { id: "code-agent" },
   { event: "code-agent/run" },
   async ({ event, step }) => {
@@ -28,7 +32,7 @@ export const codeAgent = inngest.createFunction(
     });
 
     // Create an agent with a system prompt and a model
-    const codeAgent = createAgent({
+    const codeAgent = createAgent<AgentState>({
 
       name: "code-agent",
       description: "an expert coding",
@@ -77,7 +81,7 @@ export const codeAgent = inngest.createFunction(
           parameters: z.object({
             files: z.array(z.object({ path: z.string(), content: z.string() })),
           }),
-          handler: async ({ files }, { step, network }) => {
+          handler: async ({ files }, { step, network }:Tool.Options<AgentState>) => {
             const newFiles = await step?.run("createOrUpdateFiles", async () => {
               try {
                 const updatedFiles = network.state.data.files || {};
@@ -136,7 +140,7 @@ export const codeAgent = inngest.createFunction(
 
     });
 
-    const network = createNetwork(
+    const network = createNetwork<AgentState>(
       {
         name: "coding-agent-network",
         agents: [codeAgent],
