@@ -4,6 +4,15 @@ import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
 // validate input -> save in database -> trigger job -> return response
 export const  messagesRouter = createTRPCRouter({
+  getMany: baseProcedure
+    .query(async () => {
+      const messages = await prisma.message.findMany({
+        orderBy:{
+          updatedAt:"asc"
+        }
+      });
+      return messages
+    }),
   create: baseProcedure
     .input(
       z.object({
