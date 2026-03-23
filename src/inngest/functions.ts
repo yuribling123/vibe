@@ -7,6 +7,8 @@
  *
  * Triggered by the Inngest event: " 
  */
+
+// let the ai agent code inside the sandbox 
 import { inngest } from "./client";
 import { Agent, openai, createAgent, createTool, createNetwork, Tool } from "@inngest/agent-kit";
 import { Sandbox } from "@e2b/code-interpreter";
@@ -45,7 +47,6 @@ export const codeAgentFunction = inngest.createFunction(
       }),
       // terminal tool, read file tool, write file tool 
       tools: [
-
         // Terminal tool to run commands in the sandbox
         createTool({
           name: "Terminal",
