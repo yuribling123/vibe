@@ -47,6 +47,7 @@ export const projectRouter = createTRPCRouter({
         name: "code-agent/run",
         data: {
           value: input.value,
+          projectId: createdProject.id,
         },
       });
 
