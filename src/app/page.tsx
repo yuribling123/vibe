@@ -11,21 +11,25 @@ const Page = () => {
   // create open ai key
   const [value,setValue] = useState("")
   const trpc = useTRPC();
-  const createMessage = useMutation(trpc.messages.create.mutationOptions({
-    onSuccess() {
+  const createProject = useMutation({
+    ...trpc.projects.create.mutationOptions(),
+    onError: (error) => {
+      toast.error(error.message); 
+    },  
+    onSuccess: () => {
       toast.success("Message created!"); 
     } 
-  }));
+  });
   // rename the fetched data to messages
   const {data:messages} = useQuery(trpc.messages.getMany.queryOptions());
  
 
- 
+  
   return (  
    <div className="p-4 max-w-7xl mx-auto" >
     <Input value = {value} onChange={(e)=> setValue(e.target.value)}></Input>
-     <Button disabled={createMessage.isPending}  onClick={()=> createMessage.mutate({value:value})}>
-      Invoke Background Job
+     <Button disabled={createProject.isPending}  onClick={()=> createProject.mutate({value:value})}>
+      Submir
      </Button>
      {JSON.stringify(messages,null,2)}
    </div>
