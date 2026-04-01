@@ -4,7 +4,7 @@ import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
 import { generateSlug } from "random-word-slugs";
 
-
+// create a new project with first message and trigger the ai agent job
 export const projectRouter = createTRPCRouter({
   getMany: baseProcedure
     .query(async () => { 

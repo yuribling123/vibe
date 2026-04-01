@@ -3,7 +3,7 @@ import prisma from "@/lib/db";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
 import { generateSlug } from "random-word-slugs";
-// backend endpoints
+// add a new message in the exisiting project and trigger the ai agent job
 // (1) read from the DB (2)update the DB
 // validate input -> save in database -> trigger job -> return response
 // use trpc as safetype layer to call prisma database
