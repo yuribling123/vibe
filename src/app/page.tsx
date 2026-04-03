@@ -33,7 +33,7 @@ const Page = () => {
      <Button disabled={createProject.isPending}  onClick={()=> createProject.mutate({value:value})}>
       Submit
      </Button>
-     {JSON.stringify(messages,null,2)}
+     {/* {JSON.stringify(messages,null,2)} */}
      </div>
    </div>
   
