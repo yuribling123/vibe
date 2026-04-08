@@ -4,6 +4,12 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+/**
+One projects contains many messages (conversation between user and AI assistant)
+One message might be from user or assistant, if its from assistant, it might have 
+a fragment that contains the code 
+**/
+
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -42,8 +48,8 @@ model Message{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  projectId String
-  project Project @relation(fields: [projectId], references: [id],onDelete: Cascade)
+  projectId String // foreign key point to project table 
+  project Project @relation(fields: [projectId], references: [id],onDelete: Cascade) 
   fragment Fragment?
 }
 
