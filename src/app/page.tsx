@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { toast } from "sonner";
 
 const Page = () => {
+  const router = useRouter();
 
   // create open ai key
   const [value,setValue] = useState("")
@@ -16,8 +18,9 @@ const Page = () => {
     onError: (error) => {
       toast.error(error.message); 
     },  
-    onSuccess: () => {
-      toast.success("Message created!"); 
+    // if creation is successful, redirect to the project page
+    onSuccess: (data) => {
+      router.push(`/projects/${data.id}`)
     } 
   });
   // rename the fetched data to messages
