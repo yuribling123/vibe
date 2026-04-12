@@ -10,8 +10,16 @@ import { generateSlug } from "random-word-slugs";
 export const messageRouter = createTRPCRouter({
   // get all messages from the database
   getMany: baseProcedure
-    .query(async () => {
+    .input(
+      z.object({
+        projectId: z.string().min(1, { message: "Project ID is required" })
+      })
+    )
+    .query(async ({ input }) => {
       const messages = await prisma.message.findMany({
+        where: {
+          projectId: input.projectId
+        },
         orderBy: {
           updatedAt: "asc"
         },
@@ -19,23 +27,23 @@ export const messageRouter = createTRPCRouter({
         //   fragment:true
         // }
       });
-      return  messages
+      return messages
     }),
   // create a new message in the database and trigger the ai agent job
   create: baseProcedure
     .input(
       z.object({
         value: z.string().min(1, { message: "Value is required" }).max(10000, { message: "Value must be less than 10000 characters" }),
-        projectId:z.string().min(1,{message:"Project ID is required"}),
+        projectId: z.string().min(1, { message: "Project ID is required" }),
       })
     )
     .mutation(async ({ input }) => {
       const createdMessage = await prisma.message.create({
         data: {
-              projectId:input.projectId,
-              content: input.value,
-              role: "USER",
-              type: "RESULT",
+          projectId: input.projectId,
+          content: input.value,
+          role: "USER",
+          type: "RESULT",
         },
       });
 
