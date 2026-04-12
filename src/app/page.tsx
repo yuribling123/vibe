@@ -24,7 +24,7 @@ const Page = () => {
     } 
   });
   // rename the fetched data to messages
-  const {data:messages} = useQuery(trpc.messages.getMany.queryOptions());
+
  
 
   

@@ -3,9 +3,32 @@ import prisma from "@/lib/db";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
 import { generateSlug } from "random-word-slugs";
+import { TRPCError } from "@trpc/server";
 
 // create a new project with first message and trigger the ai agent job
 export const projectRouter = createTRPCRouter({
+  // get a project by id, include messages
+  getOne:baseProcedure
+    .input(
+      z.object({
+        id: z.string().min(1, { message: "Project ID is required" })
+      })
+    )
+    .query(async ({ input }) => {
+      const project = await prisma.project.findUnique({
+        where: {
+          id: input.id
+        },
+        include:{
+          messages:true
+        }
+      });
+      if(!project){
+        throw new TRPCError({code:"NOT_FOUND",message:"Project not found"})
+      }
+      return project 
+    }), 
+  // get all projects from the database
   getMany: baseProcedure
     .query(async () => { 
       const projects = await prisma.project.findMany({

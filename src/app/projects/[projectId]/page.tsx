@@ -10,7 +10,9 @@ const Page = async ({ params }: Props) => {
     // prefetch messages for this project
     const queryClient = getQueryClient();
     // void = we don't care about the return value
+    // get all messages under this project
     void queryClient.prefetchQuery(trpc.messages.getMany.queryOptions({ projectId }));
+    void queryClient.prefetchQuery(trpc.projects.getOne.queryOptions({ id:projectId }));
 
     return (
         <div>
