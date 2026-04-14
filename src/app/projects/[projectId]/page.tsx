@@ -1,4 +1,6 @@
 import { getQueryClient,trpc } from "@/trpc/server";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import ProjectView from "../ui/views/project-view";
 
 // the page will receive a param, which after wait becomes the projectId
 interface Props {
@@ -15,10 +17,10 @@ const Page = async ({ params }: Props) => {
     void queryClient.prefetchQuery(trpc.projects.getOne.queryOptions({ id:projectId }));
 
     return (
-        <div>
-            <h1>Project Page</h1>
-            <p>Project ID: {projectId}</p>
-        </div>
+        // use the hydration boundary to pass the prefetched data to the client
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <ProjectView projectId={projectId} />
+        </HydrationBoundary>
     );
 }
 
