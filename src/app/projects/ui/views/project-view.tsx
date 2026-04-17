@@ -1,6 +1,6 @@
 "use client";
 
-import { useTRPC } from "@/trpc/client";
+import { useTRPC } from "@/trpc/client"; // for client-side data fetching
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 interface Props {
