@@ -8,6 +8,8 @@ interface Props {
   projectId: string;
 }
 
+// get all messages for this project id
+
 const ProjectView = ({ projectId }: Props) => {
   const trpc = useTRPC();
 
@@ -19,6 +21,7 @@ const ProjectView = ({ projectId }: Props) => {
     trpc.messages.getMany.queryOptions({ projectId })
   );
 
+  // resizable panel by dragging
   return (
     <div className="h-screen">
       <ResizablePanelGroup direction="horizontal">
