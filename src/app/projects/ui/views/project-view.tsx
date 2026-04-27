@@ -1,8 +1,9 @@
 "use client";
 
-import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from "@/components/ui/resizable";
 import { useTRPC } from "@/trpc/client"; // for client-side data fetching
 import { useSuspenseQuery } from "@tanstack/react-query";
+import MessageContainer from "../components/message-container";
 
 interface Props {
   projectId: string;
@@ -25,12 +26,21 @@ const ProjectView = ({ projectId }: Props) => {
   return (
     <div className="h-screen">
       <ResizablePanelGroup direction="horizontal">
+
       <ResizablePanel defaultSize={35} minSize={20} className="flex flex-col min-h-0">
-      <h1>Project View</h1>
+
+      <MessageContainer />
       </ResizablePanel>
-      {JSON.stringify(project)}
-      {JSON.stringify(messages, null, 2)}
+
+      <ResizableHandle withHandle ></ResizableHandle>
+
+      <ResizablePanel defaultSize={65} minSize={50}>
+    
+      Todo: preview
+      </ResizablePanel>
+
       </ResizablePanelGroup>
+
     </div>
   );
 };
