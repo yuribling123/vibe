@@ -20,12 +20,10 @@ export const messageRouter = createTRPCRouter({
         where: {
           projectId: input.projectId
         },
+        include:{fragment:true},
         orderBy: {
           updatedAt: "asc"
         },
-        // include:{
-        //   fragment:true
-        // }
       });
       return messages
     }),
