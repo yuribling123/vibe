@@ -1,18 +1,32 @@
+import { Fragment, MessageRole, MessageType } from "@/generated/prisma";
+
 interface MessageCardProps {
     content: string;
-    role: string;
+    role: MessageRole;
+    fragment: Fragment | null;
     createdAt: Date;
     isAcitiveFragment: boolean;
-    onFragmentClick: () => void;
-    type: string;
+    onFragmentClick: (fragment: Fragment) => void;
+    type: MessageType;
 }
 
-const MessageCard = () => {
-    return ( 
-        <>
-        message card
-        </>
-     );
+const MessageCard = (
+    { content,
+        role,
+        fragment,
+        createdAt,
+        isAcitiveFragment,
+        onFragmentClick,
+        type }: MessageCardProps
+) => {
+    if (role === "ASSISTANT") {
+        return (
+            <p>assistant</p>
+        )
+    }
+    return (
+        <p>user</p>
+    );
 }
- 
+
 export default MessageCard;
