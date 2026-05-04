@@ -11,7 +11,6 @@ const MessageContainer = ({projectId}:Props) => {
     const {data:messages} = useSuspenseQuery(
         trpc.messages.getMany.queryOptions({projectId: projectId})
     );
-    
 
 
     return ( 
