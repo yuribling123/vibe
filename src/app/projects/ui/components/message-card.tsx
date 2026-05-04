@@ -21,11 +21,11 @@ const MessageCard = (
 ) => {
     if (role === "ASSISTANT") {
         return (
-            <p>assistant</p>
+            <p>Assistant</p>
         )
     }
     return (
-        <p>user</p>
+        <p>User</p>
     );
 }
 

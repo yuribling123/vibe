@@ -4,40 +4,41 @@ import { use } from "react";
 import MessageCard from "./message-card";
 interface Props {
     projectId: string;
-}   
+}
 
-const MessageContainer = ({projectId}:Props) => {
+const MessageContainer = ({ projectId }: Props) => {
     const trpc = useTRPC();
-    const {data:messages} = useSuspenseQuery(
-        trpc.messages.getMany.queryOptions({projectId: projectId})
+    const { data: messages } = useSuspenseQuery(
+        trpc.messages.getMany.queryOptions({ projectId: projectId })
     );
+    console.log("messages", messages);
 
 
-    return ( 
+    return (
         <div className="flex flex-col flex-1 min-h-0">
             <div className="flex-1 min-h-0 overflow-y-auto">
                 <div className="pt-2 pr-1">
-                    { messages.map((message) => (
+                    {messages.map((message) => (
                         <MessageCard
-                        key={message.id}
-                        content={message.content}
-                        role={message.role}
-                        fragment={message.fragment}
-                        createdAt={message.createdAt}
-                        isAcitiveFragment={false}
-                        onFragmentClick={()=>{}}
-                        type={message.type}
-                    
-                        />  
-                        
-                        ))}
+                            key={message.id}
+                            content={message.content}
+                            role={message.role}
+                            fragment={message.fragment}
+                            createdAt={message.createdAt}
+                            isAcitiveFragment={false}
+                            onFragmentClick={() => { }}
+                            type={message.type}
+
+                        />
+
+                    ))}
 
                 </div>
 
             </div>
-            {JSON.stringify(messages)}
+
         </div>
     );
 }
- 
+
 export default MessageContainer;
