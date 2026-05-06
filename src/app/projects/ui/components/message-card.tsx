@@ -30,13 +30,14 @@ const AssistantMessage = ({
     type
 }: AssistantMessageProps) => {
     return (
-        <div className={cn("flex items-center",type==="ERROR"&&"text-red-700" )}>
+        <div className={cn("flex items-center pt-5",type==="ERROR"&&"text-red-700" )}>
            <div className="flex items-center gap-2 pl-2 mb-2">
-            <span className="text-sm font-medium">Vibe</span>
+            <span className="text-sm font-medium">Vibe:</span>
             <span className="text-sm text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">{format(createdAt, "hh:mm:ss a")}</span>
            </div>
         <div className="pl-8.5 flex flex-col gap-y-4">
             <p>{content}</p>
+            <p>{fragement?.sandboxUrl}</p>
         </div>
         </div>
     )
@@ -64,7 +65,10 @@ const MessageCard = (
         )
     }
     return (
-        <p>{role}</p>
+        <div>
+        <p>user: {content}</p> 
+       
+        </div>
     );
 }
 

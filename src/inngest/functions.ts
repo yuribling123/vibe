@@ -23,8 +23,9 @@ interface AgentState{
 } 
 
 export const codeAgentFunction = inngest.createFunction(
-  { id: "code-agent" },
-  { event: "code-agent/run" },
+  { id: "code-agent",
+   triggers:{event:"code-agent/run"},
+  },
   async ({ event, step }) => {
 
     // Get sandbox id from e2b
