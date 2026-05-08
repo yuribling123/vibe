@@ -2,7 +2,9 @@ import { Card } from "@/components/ui/card";
 import { Fragment, MessageRole, MessageType } from "@/generated/prisma";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { ChevronRightIcon, Code2Icon } from "lucide-react";
 import Image from "next/image";
+
 
 interface MessageCardProps {
     content: string;
@@ -25,6 +27,29 @@ interface AssistantMessageProps {
     isAcitiveFragment: boolean;
     onFragmentClick: (fragment: Fragment) => void;
     type: MessageType;
+}
+
+interface FragmentCardProps {
+    fragment: Fragment;
+    isActiveFragment: boolean;
+    onFragmentClick: (fragment: Fragment) => void;
+}
+ 
+const FragmentCard = ({ fragment, isActiveFragment, onFragmentClick }: FragmentCardProps) => {
+    return (
+        <button className={cn("flex items-start text-start gap-2 border rounded-md transition-colors", isActiveFragment && "bg-primary text-primary-foreground border-primiary hover:bg-secondary ")} onClick={() => onFragmentClick(fragment)}>
+            <Code2Icon className="size-4 mt-0.5"/>
+             <div className="flex flex-col flex-1">
+                <span className="text-sm font-medium line-clamp-1">
+                    {fragment.title}
+                </span>
+                <span className="text-sm" >Preview</span>
+             </div> 
+             <div className="flex items-center justify-center mt-0.5">
+                <ChevronRightIcon className="size-4  "/>
+             </div>
+        </button>
+    )
 }
 
 const UserMessage = ({content}: UserMessageProps)=>{
@@ -56,13 +81,15 @@ const AssistantMessage = ({
                     width={18}
                     height={18}
                     className="shrink-0"
-                />
+                /> 
                 <span className="text-sm font-medium">Vibe</span>
                 <span className="text-sm text-muted-foreground  transition-opacity group-hover:opacity-100">{format(createdAt, "HH:mm 'on' MMM dd, yyyy")}</span>
             </div>
             <div className="pl-8.5 flex flex-col gap-y-4">
-                <span>{content}</span>
-                <span>{fragement?.sandboxUrl}</span>
+                <span>{content}</span> 
+                {fragement && type ==="RESULT"&&(
+                    <FragmentCard fragment={fragement} isActiveFragment={isAcitiveFragment} onFragmentClick={onFragmentClick} />
+                )}
             </div>
         </div>
     )
