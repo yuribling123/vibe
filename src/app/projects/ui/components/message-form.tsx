@@ -1,4 +1,5 @@
-import {Form, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
+import { Form } from "@/components/ui/form";
 import {useState} from "react";
 import {zodResolver} from "@hookform/resolvers/zod";
 import TextareaAutosize from "react-textarea-autosize";
@@ -24,7 +25,7 @@ export const MessageForm = ({projectId}: Props) => {
     const showUsage = false;
 
     // create the form object
-    const form = useForm<z.infer<typeof formScheme>>({ 
+    const form = useForm<z.infer<typeof formScheme>>({  
         resolver: zodResolver(formScheme),
         defaultValues: {
             value: "",
@@ -51,10 +52,26 @@ export const MessageForm = ({projectId}: Props) => {
                         minRows={2}
                         maxRows={8}
                         placeholder="what would you like to build"
+                        onKeyDown={(e)=>{ 
+                            if(e.key==="Enter" && (e.ctrlKey || e.metaKey))  {
+                            e.preventDefault();
+                            form.handleSubmit(onSubmit)(e);
+                            }
+                            
+                        }}
                        
                     />
                 )}
             />
+            <div className="flex gap-x-2 items-end justify-between pt-2">
+                <div className="text-[10px] text-muted-foreground font-mono">
+                    <kbd>
+                        <span>#8984</span> Enter
+                    </kbd>
+
+                </div>
+
+            </div>
         </form>
         </Form>
     );
