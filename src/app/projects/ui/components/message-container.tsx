@@ -56,7 +56,7 @@ const MessageContainer = ({ projectId }: Props) => {
 
             </div>
             <div className="relative p-3 pt-1">
-                // white shadow the clipping text in scrolling window
+                {/* white shadow the clipping text in scrolling window */}
                 <div className="absolute -top-6 left-0 right-0 h-6 bg-gradient-to-b from-transparent to-background/70 pointer-events-none"></div>
                 <MessageForm projectId={projectId} />
 
