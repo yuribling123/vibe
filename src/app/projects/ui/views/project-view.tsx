@@ -1,4 +1,5 @@
 "use client";
+// define the layout of left and right panel, left panel is the message container, right panel is the preview of the code execution result
 
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from "@/components/ui/resizable";
 import { useTRPC } from "@/trpc/client"; // for client-side data fetching
@@ -25,8 +26,8 @@ const ProjectView = ({ projectId }: Props) => {
   return (
     <div className="h-screen">
       <ResizablePanelGroup direction="horizontal">
-
-      <ResizablePanel defaultSize={35} minSize={20} className="flex flex-col min-h-0">
+      {/* min--h fixed the size of the div */}
+      <ResizablePanel defaultSize={35} minSize={20} className="flex flex-col min-h-0"> 
       <Suspense fallback={<div>Loading messages...</div>} >
       <MessageContainer projectId={projectId} />
       </Suspense>
