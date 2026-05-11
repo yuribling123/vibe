@@ -9,6 +9,7 @@ import {ArrowUpIcon, Loader2Icon} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FormField } from "@/components/ui/form";
+import { useTRPC } from "@/trpc/client";
 interface Props{
     projectId: string;
 }
@@ -20,10 +21,7 @@ const formScheme = z.object({
     .max(10000,{message:"Value is too long"}),
 })
 
-export const MessageForm = ({projectId}: Props) => {
-    const [isFocused, setIsFocused] = useState(false);
-    const showUsage = false;
-
+export const MessageForm = ({projectId}: Props)  => {
     // create the form object
     const form = useForm<z.infer<typeof formScheme>>({  
         resolver: zodResolver(formScheme),
@@ -31,8 +29,23 @@ export const MessageForm = ({projectId}: Props) => {
             value: "",
         }
     });
-    // the value submitted is the type in the formSchema
-    const onSubmit = (values:z.infer<typeof formScheme>)=>{
+
+    const [isFocused, setIsFocused] = useState(false);
+    const showUsage = false;
+    const trpc = useTRPC();
+    const createMessage = useMutation(trpc.messages.create.mutationOptions());
+
+    const isPending = createMessage.isPending;
+    const isButtonDisabled = isPending || !form.formState.isValid
+
+ 
+    // when press submit,call trpc backend to (1) save message into database (2)call inngest ai agent for a response and save that reponse to database
+    const onSubmit = async (values:z.infer<typeof formScheme>)=>{// the submit type should be the same as the form scheme
+        await createMessage.mutateAsync({
+            value:values.value,
+            projectId,
+        });
+        form.reset();
         console.log("submit:", values);
     }
      
@@ -44,8 +57,9 @@ export const MessageForm = ({projectId}: Props) => {
                 control={form.control}
                 name="value"
                 render={({field})=>(
-                    <TextareaAutosize
+                    <TextareaAutosize // the textarea that grows as you type
                         {...field}
+                        disabled={isPending}
                         className="resize-none pt-4  border-none w-full outline-none bg-transparent"
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
@@ -65,11 +79,17 @@ export const MessageForm = ({projectId}: Props) => {
             />
             <div className="flex gap-x-2 items-end justify-between pt-2">
                 <div className="text-[10px] text-muted-foreground font-mono">
-                    <kbd>
-                        <span>#8984</span> Enter
+                    <kbd className="ml-auto pointer-none inline-flex h-5 select-none items-center rounded border bg-muted font-mono text-[10px] font-medium text-muted-foreground"> 
+                        <span>&#8984;</span> Enter
                     </kbd>
+                    &nbsp; to submit
 
                 </div>
+                <Button disabled={isButtonDisabled} className={cn("size-8 rounded-full",isButtonDisabled && "bg-muted-foreground border") } type="submit">
+                        {isPending ? <Loader2Icon className="size-4 animate-spin"/> :
+                        (<ArrowUpIcon/>)
+                         }
+                </Button>
 
             </div>
         </form>
