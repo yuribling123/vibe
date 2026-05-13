@@ -4,11 +4,14 @@ import { use, useEffect } from "react";
 import MessageCard from "./message-card";
 import { MessageForm } from "./message-form";
 import { useRef } from "react";
+import { Fragment } from "@/generated/prisma/wasm";
 interface Props {
     projectId: string;
+    activeFragment: Fragment | null;
+    setActiveFragment: (fragment: Fragment | null) => void;
 }
 
-const MessageContainer = ({ projectId }: Props) => {
+const MessageContainer = ({ projectId, activeFragment, setActiveFragment }: Props) => {
 
     const bottomRef = useRef<HTMLDivElement>(null);// locate the last element, auto scroll to bottom
     const trpc = useTRPC();
@@ -22,10 +25,10 @@ const MessageContainer = ({ projectId }: Props) => {
             // check all message from end, find last assistant message 
             (message) => message.role === "ASSISTANT"
         )
-        if (lastAssistantMessage) {
-            bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        if (lastAssistantMessage && lastAssistantMessage.fragment) {
+            setActiveFragment(lastAssistantMessage.fragment); // set active fragment to the last assistant message's fragment
         }
-    }, [messages]);
+    }, [messages,setActiveFragment]);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" }); // scroll to the html element
@@ -44,7 +47,7 @@ const MessageContainer = ({ projectId }: Props) => {
                             role={message.role}
                             fragment={message.fragment}
                             createdAt={message.createdAt}
-                            isAcitiveFragment={false}
+                            isAcitiveFragment={activeFragment?.id === message.fragment?.id}
                             onFragmentClick={() => { }}
                             type={message.type}
                         />
