@@ -37,6 +37,7 @@ interface FragmentCardProps {
  
 const FragmentCard = ({ fragment, isActiveFragment, onFragmentClick }: FragmentCardProps) => {
     return (
+        // click on a fragment card will reset the active fragment and change the class style of it 
         <button className={cn("flex items-start text-start gap-2 border rounded-md transition-colors", isActiveFragment && "bg-primary text-primary-foreground border-primiary hover:bg-secondary ")} onClick={() => onFragmentClick(fragment)}>
             <Code2Icon className="size-4 mt-0.5"/>
              <div className="flex flex-col flex-1">
