@@ -30,7 +30,7 @@ interface AssistantMessageProps {
 }
 
 interface FragmentCardProps {
-    fragment: Fragment;
+    fragment: Fragment; 
     isActiveFragment: boolean;
     onFragmentClick: (fragment: Fragment) => void;
 }

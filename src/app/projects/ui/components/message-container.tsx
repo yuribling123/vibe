@@ -5,6 +5,7 @@ import MessageCard from "./message-card";
 import { MessageForm } from "./message-form";
 import { useRef } from "react";
 import { Fragment } from "@/generated/prisma/wasm";
+import { MessageLoading } from "./message-loading";
 interface Props {
     projectId: string;
     activeFragment: Fragment | null;
@@ -34,6 +35,9 @@ const MessageContainer = ({ projectId, activeFragment, setActiveFragment }: Prop
         bottomRef.current?.scrollIntoView({ behavior: "smooth" }); // scroll to the html element
     }, [messages.length])
 
+    const lastMessage = messages[messages.length - 1];
+    const isLastMessageUser = lastMessage?.role === "USER";
+
 
     return (
         // render all user and assistant messages in a scrollable container 
@@ -53,6 +57,7 @@ const MessageContainer = ({ projectId, activeFragment, setActiveFragment }: Prop
                         />
 
                     ))}
+                    {isLastMessageUser && <MessageLoading/>}
                     <div ref={bottomRef} />
 
                 </div>
