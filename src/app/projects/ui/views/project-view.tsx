@@ -7,6 +7,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import MessageContainer from "../components/message-container";
 import { Suspense, useState } from "react";
 import { Fragment } from "@/generated/prisma/wasm";
+import ProjectHeader from "../components/project-header";
 
 interface Props {
   projectId: string;
@@ -29,10 +30,13 @@ const ProjectView = ({ projectId }: Props) => {
     <div className="h-screen">
       <ResizablePanelGroup direction="horizontal">
       {/* min--h fixed the size of the div */}
-      <ResizablePanel defaultSize={35} minSize={20} className="flex flex-col min-h-0"> 
+      <ResizablePanel defaultSize={35} minSize={20} className="flex flex-col min-h-0">
+        <ProjectHeader projectId={projectId} />
+
       <Suspense fallback={<div>Loading messages...</div>} >
       <MessageContainer projectId={projectId} activeFragment={activeFragment} setActiveFragment={setActiveFragment} />
       </Suspense>
+
       </ResizablePanel>
 
       <ResizableHandle ></ResizableHandle>
