@@ -31,7 +31,9 @@ const ProjectView = ({ projectId }: Props) => {
       <ResizablePanelGroup direction="horizontal">
       {/* min--h fixed the size of the div */}
       <ResizablePanel defaultSize={35} minSize={20} className="flex flex-col min-h-0">
+        <Suspense fallback={<div>Loading project header...</div>} >
         <ProjectHeader projectId={projectId} />
+        </Suspense>
 
       <Suspense fallback={<div>Loading messages...</div>} >
       <MessageContainer projectId={projectId} activeFragment={activeFragment} setActiveFragment={setActiveFragment} />
