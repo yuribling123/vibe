@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import {ChevronDownIcon, ChevronLeftIcon, SunMoonIcon} from "lucide-react"; 
 import { useTRPC } from "@/trpc/client";
 import { Dropdown } from "react-day-picker";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenuContent, DropdownMenuSubContent } from "@radix-ui/react-dropdown-menu";
+import { set } from "zod";
 
 // suspense query is suspend the component until the data is ready, then render the component with the data
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const ProjectHeader = ({ projectId }: Props) => {
+    const { theme,setTheme} = useTheme();
     const trpc = useTRPC();
     const {data: project} = useSuspenseQuery(trpc.projects.getOne.queryOptions({id:projectId})    );
     return ( 
@@ -46,8 +48,28 @@ const ProjectHeader = ({ projectId }: Props) => {
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger className="gap-2">
                             <SunMoonIcon className="size-4 text-muted-foreground"></SunMoonIcon>
-                            <span>Theme</span>
+                            <span>appearance</span>
                         </DropdownMenuSubTrigger>
+
+                        <DropdownMenuPortal>
+
+                            <DropdownMenuSubContent>
+                                <DropdownMenuRadioGroup value="theme" onValueChange={setTheme}>
+
+                                    <DropdownMenuRadioItem value="light">
+                                        <span>light</span>
+                                    </DropdownMenuRadioItem>
+                                    <DropdownMenuRadioItem value="dark">
+                                        <span>dark</span>
+                                    </DropdownMenuRadioItem>
+                                    
+                                </DropdownMenuRadioGroup>
+
+
+                            </DropdownMenuSubContent>
+
+                            
+                        </DropdownMenuPortal>
                         
                     </DropdownMenuSub>
                     
