@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import {ChevronDownIcon, ChevronLeftIcon, SunMoonIcon} from "lucide-react"; 
 import { useTRPC } from "@/trpc/client";
 import { Dropdown } from "react-day-picker";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { DropdownMenuContent, DropdownMenuSubContent } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuTrigger,DropdownMenuContent, DropdownMenuSubContent  } from "@/components/ui/dropdown-menu";
+
 import { set } from "zod";
 
 // suspense query is suspend the component until the data is ready, then render the component with the data
@@ -26,7 +26,7 @@ const ProjectHeader = ({ projectId }: Props) => {
          
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant = "ghost" size="sm" className="focus-visible:ring-0 hover:opacity-75 transition-opacity pl-2!">
+                    <Button variant="ghost" size="sm" className="focus-visible:ring-0 hover:opacity-75 transition-opacity pl-2!">
                         <Image src="/logo.svg" alt="vibe" width={18} height={18}  />
                         <span className="text-sm font-medium"> {project.name}</span>
                         <ChevronDownIcon/>
@@ -35,8 +35,8 @@ const ProjectHeader = ({ projectId }: Props) => {
                     
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent side="bottom">
-                    <DropdownMenuItem asChild>
+                <DropdownMenuContent side="bottom" className="bg-white border">
+                    <DropdownMenuItem asChild >
                         <Link href="/">
                             <span>go to dashboard</span>
                         </Link>
@@ -53,11 +53,11 @@ const ProjectHeader = ({ projectId }: Props) => {
 
                         <DropdownMenuPortal>
 
-                            <DropdownMenuSubContent>
+                            <DropdownMenuSubContent  className="bg-white border ">
                                 <DropdownMenuRadioGroup value="theme" onValueChange={setTheme}>
 
-                                    <DropdownMenuRadioItem value="light">
-                                        <span>light</span>
+                                    <DropdownMenuRadioItem value="light" className=" pr-5">
+                                        <span  >light</span>
                                     </DropdownMenuRadioItem>
                                     <DropdownMenuRadioItem value="dark">
                                         <span>dark</span>
