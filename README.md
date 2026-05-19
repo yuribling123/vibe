@@ -42,3 +42,21 @@ inngest.send() → triggers background function
 
 ### note 
 Background jobs let user run slow AI work without blocking the user request.
+
+
+### update 5/19
+
+summary of how the app workds
+
+
+1. Inngest receives the event: "code-agent/run"
+2. An E2B sandbox is created
+3. The sandbox is based on a prebuilt environment from the Dockerfile
+4. The Dockerfile creates a base Next.js app
+5. The agent gets the sandboxId
+6. The agent uses tools to modify files inside the sandbox
+7. The agent runs terminal commands inside the sandbox, such as `npm run dev`
+8. E2B exposes port 3000
+9. You return `https://${sandbox.getHost(3000)}`
+
+![alt text](image.png)
