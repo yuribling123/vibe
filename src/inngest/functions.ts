@@ -34,7 +34,7 @@ export const codeAgentFunction = inngest.createFunction(
       return sandbox.sandboxId;
     });
 
-    // Create an agent with a system prompt and a model
+    // Create an agent with our written custmoized prompt, model, and tool to write in remote sandbox
     const codeAgent = createAgent<AgentState>({
 
       name: "code-agent",

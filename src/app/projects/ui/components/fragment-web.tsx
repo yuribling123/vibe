@@ -9,7 +9,9 @@ const FragmentWeb = ({data}:Props) => {
         <div className="flex flex-col w-full h-full">
 
             {/* run another website inside */}
-            <iframe className="h-full w-full" sandbox="allow-forms allow-scripts allow-same-origin">
+            <iframe className="h-full w-full" sandbox="allow-forms allow-scripts allow-same-origin"
+            loading="lazy" src={data.sandboxUrl}
+            >
 
 
             </iframe>
