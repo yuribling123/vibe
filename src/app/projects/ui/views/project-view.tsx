@@ -9,6 +9,10 @@ import { Suspense, useState } from "react";
 import { Fragment } from "@/generated/prisma/wasm";
 import ProjectHeader from "../components/project-header";
 import FragmentWeb from "../components/fragment-web";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CodeIcon, CrownIcon, EyeIcon} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface Props {
   projectId: string;
@@ -19,6 +23,7 @@ interface Props {
 const ProjectView = ({ projectId }: Props) => {
   const [activeFragment,setActiveFragment] = useState<Fragment| null>(null);
   const trpc = useTRPC();
+  const [tabState,setTabState] = useState<"preview"| "code">("preview");
 
   // const { data: project } = useSuspenseQuery(
   //   trpc.projects.getOne.queryOptions({ id: projectId })
@@ -46,8 +51,43 @@ const ProjectView = ({ projectId }: Props) => {
 
       <ResizablePanel defaultSize={65} minSize={50}>
         {/* this means render the active fragment component when it exists */}
-    
+
+      <Tabs className="h-full gap-y-0" defaultValue="preview" value = {tabState} onValueChange={(value)=>setTabState(value as "preview" | "code")}>
+      <TabsList className="h-8 p-0 border rounded-md">
+      <TabsTrigger value="preview" className="rounded-md">
+          <EyeIcon></EyeIcon> <span>demo</span>
+      </TabsTrigger>
+      <TabsTrigger value="code" className="rounded-md">
+        <CodeIcon></CodeIcon> <span>code</span>
+
+      </TabsTrigger>
+      <div className="w-full flex items-center p-2 border-b gap-x-2">
+      
+      </div>
+      </TabsList>
+
+      <div className="ml-auto flex items-center gap-x-2">
+        <Button asChild size="sm" variant="default">
+          <Link href="/pricing"><CrownIcon /> upgrade </Link>
+        </Button>
+      </div>
+
+      <TabsContent value="preview" className="h-full">
+        {!!activeFragment && <FragmentWeb data={activeFragment} />}
+
+      </TabsContent>
+
+         <TabsContent value="code" className="h-full">
+        <p>code</p>
+
+      </TabsContent>
+
+
+
       {!!activeFragment && <FragmentWeb data={activeFragment} />}
+      </Tabs>
+
+ 
       </ResizablePanel>
 
       </ResizablePanelGroup>
