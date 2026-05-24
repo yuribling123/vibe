@@ -10,9 +10,11 @@ import { Fragment } from "@/generated/prisma/wasm";
 import ProjectHeader from "../components/project-header";
 import FragmentWeb from "../components/fragment-web";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CodeIcon, CrownIcon, EyeIcon} from "lucide-react";
+import { CodeIcon, CrownIcon, EyeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import CodeView from "../code-view";
+import FileExplorer from "../components/file-explorer";
 
 interface Props {
   projectId: string;
@@ -21,9 +23,9 @@ interface Props {
 // get all messages for this project id
 
 const ProjectView = ({ projectId }: Props) => {
-  const [activeFragment,setActiveFragment] = useState<Fragment| null>(null);
+  const [activeFragment, setActiveFragment] = useState<Fragment | null>(null);
   const trpc = useTRPC();
-  const [tabState,setTabState] = useState<"preview"| "code">("preview");
+  const [tabState, setTabState] = useState<"preview" | "code">("preview");
 
   // const { data: project } = useSuspenseQuery(
   //   trpc.projects.getOne.queryOptions({ id: projectId })
@@ -34,61 +36,65 @@ const ProjectView = ({ projectId }: Props) => {
   // resizable panel by dragging
   return (
     <div className="h-screen">
+
+
+
       <ResizablePanelGroup direction="horizontal">
-      {/* min--h fixed the size of the div */}
-      <ResizablePanel defaultSize={35} minSize={20} className="flex flex-col min-h-0">
-        <Suspense fallback={<div>Loading project header...</div>} >
-        <ProjectHeader projectId={projectId} />
-        </Suspense>
+        {/* min--h fixed the size of the div */}
+        <ResizablePanel defaultSize={35} minSize={20} className="flex flex-col min-h-0">
+          <Suspense fallback={<div>Loading project header...</div>} >
+            <ProjectHeader projectId={projectId} />
+          </Suspense>
 
-      <Suspense fallback={<div>Loading messages...</div>} >
-      <MessageContainer projectId={projectId} activeFragment={activeFragment} setActiveFragment={setActiveFragment} />
-      </Suspense>
+          <Suspense fallback={<div>Loading messages...</div>} >
+            <MessageContainer projectId={projectId} activeFragment={activeFragment} setActiveFragment={setActiveFragment} />
+          </Suspense>
 
-      </ResizablePanel>
+        </ResizablePanel>
 
-      <ResizableHandle ></ResizableHandle>
+        <ResizableHandle ></ResizableHandle>
 
-      <ResizablePanel defaultSize={65} minSize={50}>
-        {/* this means render the active fragment component when it exists */}
+        <ResizablePanel defaultSize={65} minSize={50}>
+          {/* this means render the active fragment component when it exists */}
 
-      <Tabs className="h-full gap-y-0" defaultValue="preview" value = {tabState} onValueChange={(value)=>setTabState(value as "preview" | "code")}>
-      <TabsList className="h-8 p-0 border rounded-md">
-      <TabsTrigger value="preview" className="rounded-md">
-          <EyeIcon></EyeIcon> <span>demo</span>
-      </TabsTrigger>
-      <TabsTrigger value="code" className="rounded-md">
-        <CodeIcon></CodeIcon> <span>code</span>
+          <Tabs className="h-full gap-y-0" defaultValue="preview" value={tabState} onValueChange={(value) => setTabState(value as "preview" | "code")}>
+            <div className="flex items-center gap-x-2">
 
-      </TabsTrigger>
-      <div className="w-full flex items-center p-2 border-b gap-x-2">
-      
-      </div>
-      </TabsList>
+              <TabsList className="h-8 p-0 border rounded-md">
 
-      <div className="ml-auto flex items-center gap-x-2">
-        <Button asChild size="sm" variant="default">
-          <Link href="/pricing"><CrownIcon /> upgrade </Link>
-        </Button>
-      </div>
+                <TabsTrigger value="preview" className="rounded-md">
+                  <EyeIcon></EyeIcon> <span>demo</span>
+                </TabsTrigger>
+                <TabsTrigger value="code" className="rounded-md">
+                  <CodeIcon></CodeIcon> <span>code</span>
+                </TabsTrigger>
+              </TabsList>
 
-      <TabsContent value="preview" className="h-full">
-        {!!activeFragment && <FragmentWeb data={activeFragment} />}
+              <div className="ml-auto flex items-center gap-x-2">
+                <Button asChild size="sm" variant="default">
+                  <Link href="/pricing"><CrownIcon /> upgrade </Link>
+                </Button>
+              </div>
 
-      </TabsContent>
-
-         <TabsContent value="code" className="h-full">
-        <p>code</p>
-
-      </TabsContent>
+            </div>
 
 
 
-      {!!activeFragment && <FragmentWeb data={activeFragment} />}
-      </Tabs>
 
- 
-      </ResizablePanel>
+            <TabsContent value="preview" className="h-full">
+              {!!activeFragment && <FragmentWeb data={activeFragment} />}
+            </TabsContent>
+
+            <TabsContent value="code" className="h-full">
+
+              {!!activeFragment && (<FileExplorer files = {activeFragment.files as {[path:string]:string}} />)}
+
+            </TabsContent>
+
+          </Tabs>
+
+
+        </ResizablePanel>
 
       </ResizablePanelGroup>
 
