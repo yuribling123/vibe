@@ -22,6 +22,7 @@ const CodeView = ( { code, lang }: Props) => {
 
 
     return (
+        // preserve spacing and line breaks in code
         <pre className="p-2 bg-transparent border-none m-0 text-xs">
             <code className={`language-${lang}`}>
                 {code}

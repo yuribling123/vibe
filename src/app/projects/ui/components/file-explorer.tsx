@@ -4,6 +4,7 @@ import { useState } from "react";
 import Hint from "../hint";
 import { Button } from "@/components/ui/button";
 import { CopyIcon } from "lucide-react";
+import CodeView from "../code-view";
 
 
 type FileCollection = { [path: string]: string };
@@ -35,19 +36,21 @@ const FileExplorer = (
             <ResizablePanel defaultSize={70} minSize={50} className="flex flex-col">
                 {selectedFile && files[selectedFile] ? (
                     <div className="h-full w-full flex flex-col">
+
                         <div className="border-b bg-sidebar px-4 py-2 flex justify-between items-center">
-
                             <Hint text="copy to clickboard" side="bottom" align="start">
-                                <Button variant="outline" size="icon" onClick={() => {}}  disabled = {false}>
+                                <Button variant="outline" size="icon" onClick={() => { }} disabled={false}>
 
-                                    <CopyIcon/>
+                                    <CopyIcon />
                                 </Button>
-
-                                
                             </Hint>
-
-
                         </div>
+
+                        <div className="flex-1 overflow-auto">
+                            <CodeView code={files[selectedFile]} lang={getLanguageFromExtension(selectedFile)}></CodeView>
+                        </div>
+
+
                     </div>
 
                 )
