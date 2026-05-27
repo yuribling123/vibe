@@ -9,10 +9,17 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-
-
-// this function converts a flat object of file paths to nested tree structure
-// input: an objecct where keys and values are string
+/**
+ this function converts a flat object of file paths to nested tree structure
+ 1. Read file paths
+ 2. Split path:
+    "app/components/Button.tsx"
+    → ["app","components","Button.tsx"]
+ 3. Build folders
+ 4. Put file in correct folder
+ 5. Recursively turn folders into nested arrays
+input: an object where keys and values are string
+*/
 export function convertFilestoTreeItems(files: { [path: string]: string }): TreeItem[] {
 
   // an object where key is string and value is either string(file content) or another Tree Node object (subdirectory)
