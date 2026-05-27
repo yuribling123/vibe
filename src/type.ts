@@ -1,0 +1,2 @@
+export type TreeItem = string | [string,...TreeItem[]]
+// a recursive type that represents a file tree, where each item is either a string (representing a file) or a tuple of a string and an array of TreeItems (representing a directory and its contents)
