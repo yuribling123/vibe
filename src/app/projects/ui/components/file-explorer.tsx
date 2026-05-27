@@ -1,9 +1,11 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import path from "path";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Hint from "../hint";
 import { Button } from "@/components/ui/button";
 import { CopyIcon } from "lucide-react";
+import TreeView from "@/components/ui/tree-view";
+import { convertFilestoTreeItems } from "@/lib/utils";
 import CodeView from "../code-view";
 
 
@@ -24,11 +26,36 @@ const FileExplorer = (
     { files }: Props
 ) => {
     // select the first file by default
-    const [selectedFile, setSelectedFile] = useState<string | null>(() => { const fileKeys = Object.keys(files); return fileKeys.length > 0 ? fileKeys[0] : null; });
+
+    const [selectedFile,setSelectedFile] = useState<string | null>(
+        ()=>{
+            const fileKeys = Object.keys(files);
+            return fileKeys.length > 0 ? fileKeys[0] : null
+        
+        }
+    )
+    // remember the tree data only needs to be recomputed when files change
+    const treeData = useMemo(
+        ()=>{
+            return convertFilestoTreeItems(files)
+        },
+        [files]
+    )
+    // use the old function object
+    const handleFileSelect = useCallback(
+        (filePath:string)=>{
+            if (files[filePath]) {
+                setSelectedFile(filePath);
+            }
+        },[files]
+        
+    )
+
+
     return (
         <ResizablePanelGroup direction="horizontal">
             <ResizablePanel defaultSize={30} minSize={30} className="bg-sidebar">
-                <p>Tree</p>
+                <TreeView data={treeData} onFileSelect={handleFileSelect} />
             </ResizablePanel>
 
             <ResizableHandle className="hover:bg-primary transition-colors"></ResizableHandle>
