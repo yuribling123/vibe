@@ -28,7 +28,7 @@ export function convertFilestoTreeItems(files: { [path: string]: string }): Tree
   }
   const tree: TreeNode = {}
   const sortedPaths = Object.keys(files).sort()
-  
+
   //for each file path, split it into parts, creating nested objects for directories and assigning file content to the leaf nodes
   for (const filePath of sortedPaths) {
     let current = tree
@@ -59,26 +59,26 @@ export function convertFilestoTreeItems(files: { [path: string]: string }): Tree
     }
     const children: TreeItem[] = []
     for (const [key, value] of entries) {
-      if (value == null) {
+
+      if (typeof value === "string") {
         children.push(key)
       } else {
-        const subTree = convertNode(value as TreeNode, key)
-        if (Array.isArray(subTree)) {
+        const subTree = convertNode(value)
+        if (subTree.length > 0) {
           children.push([key, ...subTree])
-
         } else {
-          children.push([key, subTree])
+          children.push(key)
         }
-
       }
+
     }
     return children
-
   }
 
 
-  const result = convertNode(tree)
-  return Array.isArray(result) ? result : [result]
+
+const result = convertNode(tree)
+return Array.isArray(result) ? result : [result]
 
 
 }
