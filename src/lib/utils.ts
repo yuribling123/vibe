@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 /**
- this function converts a flat object of file paths to nested tree structure
+ this function converts file paths from a object（keys: string; value:string）to nested array [["folder", file, ["subfolder", file]]]
  1. Read file paths
  2. Split path:
     "app/components/Button.tsx"
