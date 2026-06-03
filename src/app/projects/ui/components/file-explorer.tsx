@@ -124,7 +124,6 @@ const FileExplorer = (
 
     return (
         <ResizablePanelGroup direction="horizontal">
-
             {/* render the folders and files tree */}
             <ResizablePanel defaultSize={30} minSize={30} className="bg-sidebar">
                 <TreeView data={treeData} onFileSelect={handleFileSelect} />
@@ -137,17 +136,15 @@ const FileExplorer = (
                 {selectedFile && files[selectedFile] ? (
                     <div className="h-full w-full flex flex-col">
                         <div className="border-b bg-sidebar px-4 py-2 flex justify-between items-center">
-
                             {/* display the file path of the selected file */}
                             <FileBreadcrumb filePath={selectedFile}></FileBreadcrumb>
-
-
                             <Hint text="copy to clickboard" side="bottom" align="start">
                                 <Button variant="outline" size="icon" onClick={handleCopy} disabled={false}>
                                     {copied?<CopyCheckIcon/>:<CopyIcon/>}
                                 </Button>
                             </Hint>
                         </div>
+                        {/* display the code of the selected file */}
                         <div className="flex-1 overflow-auto">
                             <CodeView code={files[selectedFile]} lang={getLanguageFromExtension(selectedFile)}></CodeView>
                         </div>

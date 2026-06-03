@@ -88,7 +88,6 @@ const ProjectView = ({ projectId }: Props) => {
             <TabsContent value="code" className="min-h-0">
                 {/* files will be an object with string as the key as values{"app/page.tsx": "code here"} */}
               {!!activeFragment && (<FileExplorer files = {activeFragment.files as {[path:string]:string}} />)}
-
             </TabsContent>
 
           </Tabs>

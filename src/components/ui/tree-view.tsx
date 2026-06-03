@@ -24,14 +24,12 @@ const TreeView = (
                 <SidebarContent>
                     <SidebarGroup>
                         <SidebarGroupContent>
-
                             <SidebarMenu>
                                 {/* recursive rending of all folders and files trees */}
                                 {data.map((item,index)=>(
                                     <Tree key={index} item={item} onFileSelect={onFileSelect} selectedValue={value || null} parentPath="" />
                                 ))}
                             </SidebarMenu>
-   
                         </SidebarGroupContent>
                         
                     </SidebarGroup>
@@ -40,13 +38,8 @@ const TreeView = (
                 <SidebarRail></SidebarRail>
                 
             </Sidebar>
-
-
-
             
         </SidebarProvider>
-
-        
 
      );
 }
@@ -68,7 +61,7 @@ const Tree = ({ item, selectedValue, onFileSelect, parentPath }: TreeProps) => {
     //name = "app" items = ["page.tsx","layout.tsx"] for item = ["app", "page.tsx", "layout.tsx"]
     //name = "page.tsx" items = [] for "page.tsx" 
     
-    // construct the full file path for the current item
+    //construct the full file path for the current item
     const currentPath = parentPath ? `${parentPath}/${name}` : name;
  
     // the tree item is a file
@@ -76,6 +69,7 @@ const Tree = ({ item, selectedValue, onFileSelect, parentPath }: TreeProps) => {
         const isSelected = currentPath === selectedValue;
 
         return (     
+            // click on the file will set the current selected file
             <SidebarMenuButton isActive={isSelected} onClick={()=>onFileSelect?.(currentPath)}>
                 <FileIcon></FileIcon> 
                 {name} 
