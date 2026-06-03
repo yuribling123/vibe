@@ -1,12 +1,20 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import path from "path";
-import { useCallback, useMemo, useState } from "react";
+import { Fragment, useCallback, useMemo, useState } from "react";
 import Hint from "../hint";
 import { Button } from "@/components/ui/button";
 import { CopyIcon } from "lucide-react";
 import TreeView from "@/components/ui/tree-view";
 import { convertFilestoTreeItems } from "@/lib/utils";
 import CodeView from "../code-view";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 
 type FileCollection = { [path: string]: string };
@@ -16,6 +24,52 @@ function getLanguageFromExtension(filename: string) {
     const extension = filename.split(".").pop()?.toLowerCase();
     return extension || "text"
 }
+
+interface FileBreadcrumbProps {
+    filePath: string;
+}
+//use breadcrumb to display the current file path
+//bread crumbs means the file path to home
+const FileBreadcrumb = ({ filePath }: FileBreadcrumbProps) => {
+    const pathSegments = filePath.split("/");
+    const maxSegments = 4;
+
+    const segments =
+        pathSegments.length <= maxSegments
+            ? pathSegments
+            : [pathSegments[0], "...", pathSegments[pathSegments.length - 1]];
+
+    return (
+        <Breadcrumb>
+            <BreadcrumbList>
+                {segments.map((segment, index) => {
+                    const isLast = index === segments.length - 1;
+
+                    return (
+                        // invisible wrapper
+                        <Fragment key={index}> 
+                            <BreadcrumbItem>
+                                {isLast ? (
+                                    <BreadcrumbPage className="font-medium">
+                                        {segment}
+                                    </BreadcrumbPage>
+                                ) : (
+                                    <span className="text-muted-foreground">
+                                        {segment}
+                                    </span>
+                                )}
+                            </BreadcrumbItem>
+
+                            {!isLast && <BreadcrumbSeparator />}
+                        </Fragment>
+                    );
+                })}
+            </BreadcrumbList>
+        </Breadcrumb>
+    );
+};
+
+
 
 // the component must receive this type of file object:files = { {"app/page.tsx": "code here"} }
 interface Props {
@@ -68,6 +122,11 @@ const FileExplorer = (
                 {selectedFile && files[selectedFile] ? (
                     <div className="h-full w-full flex flex-col">
                         <div className="border-b bg-sidebar px-4 py-2 flex justify-between items-center">
+
+                            {/* display the file path of the selected file */}
+                            <FileBreadcrumb filePath={selectedFile}></FileBreadcrumb>
+
+
                             <Hint text="copy to clickboard" side="bottom" align="start">
                                 <Button variant="outline" size="icon" onClick={() => { }} disabled={false}>
                                     <CopyIcon />

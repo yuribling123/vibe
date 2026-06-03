@@ -70,7 +70,7 @@ const Tree = ({ item, selectedValue, onFileSelect, parentPath }: TreeProps) => {
     
     // construct the full file path for the current item
     const currentPath = parentPath ? `${parentPath}/${name}` : name;
-
+ 
     // the tree item is a file
     if (!items.length){
         const isSelected = currentPath === selectedValue;
