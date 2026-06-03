@@ -13,21 +13,24 @@ interface Props {
 }
 
 const MessageContainer = ({ projectId, activeFragment, setActiveFragment }: Props) => {
-
+    // ref remembers the data without causing re-render
     const bottomRef = useRef<HTMLDivElement>(null);// locate the last element, auto scroll to bottom
+    const lastAssistantMessageIdRef = useRef<string | null>(null); // store the last assistant message id
     const trpc = useTRPC();
     const { data: messages } = useSuspenseQuery(
         trpc.messages.getMany.queryOptions({ projectId: projectId })
     );
     console.log("messages", messages);
 
+    // set the last assistant message as active fragment
     useEffect(() => {
         const lastAssistantMessage = messages.findLast(
             // check all message from end, find last assistant message 
             (message) => message.role === "ASSISTANT"
         )
-        if (lastAssistantMessage && lastAssistantMessage.fragment) {
+        if (lastAssistantMessage?.fragment && lastAssistantMessage.id !== lastAssistantMessageIdRef.current) {
             setActiveFragment(lastAssistantMessage.fragment); // set active fragment to the last assistant message's fragment
+            lastAssistantMessageIdRef.current = lastAssistantMessage.id; // update the ref to the last assistant message id
         }
     }, [messages,setActiveFragment]);
 
@@ -55,17 +58,15 @@ const MessageContainer = ({ projectId, activeFragment, setActiveFragment }: Prop
                             onFragmentClick={() => setActiveFragment(message.fragment)}
                             type={message.type}
                         />
-
                     ))}
                     {isLastMessageUser && <MessageLoading/>}
                     <div ref={bottomRef} />
-
                 </div>
-
             </div>
             <div className="relative p-3 pt-1">
                 {/* white shadow the clipping text in scrolling window */}
                 <div className="absolute -top-6 left-0 right-0 h-6 bg-gradient-to-b from-transparent to-background/70 pointer-events-none"></div>
+                {/* the message input component */}
                 <MessageForm projectId={projectId} />
 
             </div>
