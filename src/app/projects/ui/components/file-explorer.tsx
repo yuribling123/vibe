@@ -3,18 +3,19 @@ import path from "path";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import Hint from "../hint";
 import { Button } from "@/components/ui/button";
-import { CopyIcon } from "lucide-react";
+import { CopyCheckIcon, CopyIcon } from "lucide-react";
 import TreeView from "@/components/ui/tree-view";
 import { convertFilestoTreeItems } from "@/lib/utils";
 import CodeView from "../code-view";
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Filesystem } from "e2b";
 
 
 type FileCollection = { [path: string]: string };
@@ -47,7 +48,7 @@ const FileBreadcrumb = ({ filePath }: FileBreadcrumbProps) => {
 
                     return (
                         // invisible wrapper
-                        <Fragment key={index}> 
+                        <Fragment key={index}>
                             <BreadcrumbItem>
                                 {isLast ? (
                                     <BreadcrumbPage className="font-medium">
@@ -71,6 +72,7 @@ const FileBreadcrumb = ({ filePath }: FileBreadcrumbProps) => {
 
 
 
+
 // the component must receive this type of file object:files = { {"app/page.tsx": "code here"} }
 interface Props {
     files: FileCollection
@@ -80,6 +82,8 @@ interface Props {
 const FileExplorer = (
     { files }: Props
 ) => {
+    // store if the file is copied
+    const [copied, setCopied] = useState(false);
     // store (the file path) which file is being selected, default to the first file in the list
     const [selectedFile, setSelectedFile] = useState<string | null>(
         () => {
@@ -106,6 +110,17 @@ const FileExplorer = (
         }, [files]
     )
 
+    // the function to copy file content
+    const handleCopy = useCallback(() => {
+        if (selectedFile){
+            navigator.clipboard.writeText(files[selectedFile])
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+     }
+        , [selectedFile, files])
+
+
 
     return (
         <ResizablePanelGroup direction="horizontal">
@@ -128,8 +143,8 @@ const FileExplorer = (
 
 
                             <Hint text="copy to clickboard" side="bottom" align="start">
-                                <Button variant="outline" size="icon" onClick={() => { }} disabled={false}>
-                                    <CopyIcon />
+                                <Button variant="outline" size="icon" onClick={handleCopy} disabled={false}>
+                                    {copied?<CopyCheckIcon/>:<CopyIcon/>}
                                 </Button>
                             </Hint>
                         </div>
