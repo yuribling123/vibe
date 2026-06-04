@@ -60,3 +60,13 @@ summary of how the app workds
 9. You return `https://${sandbox.getHost(3000)}`
 
 ![alt text](image.png)
+
+
+
+### update 6/3
+1.user can click on each message fragment to check out the new app being generated
+2.user can preview and interact with app
+3.user can check out all the code files
+
+
+![alt text](image-1.png)
