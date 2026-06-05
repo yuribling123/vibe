@@ -1,3 +1,4 @@
+"use client"
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { useState } from "react";
@@ -12,6 +13,7 @@ import { FormField } from "@/components/ui/form";
 import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { PROJECT_TEMPLATES } from "../constants";
 
 
 // validate what the form should look like using zod
@@ -62,13 +64,24 @@ export const  ProjectForm = () => {
         // executes the mutation in createProject object
         await  createProject.mutateAsync({
             value: values.value
-        });
-       
+        }); 
     }
+    // callback for submit a template 
+    const onSelect = (value:string) => {
+        // ensure form values all validate
+        form.setValue("value",value,{
+            shouldDirty:true,
+            shouldValidate:true,
+            shouldTouch:true
+        })
+    }
+
+
 
     const [isLoading, setIsLoading] = useState(false);
     return (
         <Form {...form}> {/* the form provider */}
+            <section className="space-y-10">
             <form onSubmit={form.handleSubmit(onSubmit)} className={cn("relative border p-4 pt-1 rounded-xl bg-sidebar dark:bg-sidebar transition-all", isFocused && "shadow-xs", showUsage && "rounded-t-none")}> {/* html form */}
                 <FormField
                     control={form.control}
@@ -110,6 +123,19 @@ export const  ProjectForm = () => {
 
                 </div>
             </form>
+
+            {/* exmaple templates to build from */}
+            <div className="flex-wrap justify-center gap-2 hidden md:flex max-w-3xl">
+                {PROJECT_TEMPLATES.map((template)=>(
+                    <Button key={template.title} variant="outline" size="sm" className="bg-white dark:bg-sidebar" onClick={()=>onSelect(template.prompt)}>
+                        {template.emoji}
+                    </Button>
+
+                    
+                ))}
+            </div>
+        
+        </section>
         </Form>
     );
 }

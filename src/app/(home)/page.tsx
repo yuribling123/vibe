@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
-import { ProjectForm } from "@/modules/home/project-form";
+import { ProjectForm } from "@/modules/home/ui/project-form";
 
 const Page = () => {  
 
