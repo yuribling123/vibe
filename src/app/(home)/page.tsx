@@ -8,11 +8,9 @@ import { use, useState } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { ProjectForm } from "@/modules/home/ui/project-form";
+import ProjectList from "@/modules/home/ui/components/projects-list";
 
 const Page = () => {  
-
- 
-
   
   return ( 
     
@@ -28,9 +26,10 @@ const Page = () => {
         </h1>
 
         <ProjectForm  />
-
-
       </section>
+
+      <ProjectList/>
+
 
     </div>
  

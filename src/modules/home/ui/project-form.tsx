@@ -23,7 +23,7 @@ const formScheme = z.object({
         .max(10000, { message: "Value is too long" }),
 })
 
-export const  ProjectForm = () => {
+export const ProjectForm = () => {
     // to naviagate a diff page
     const router = useRouter();
     // create the form object
@@ -81,7 +81,7 @@ export const  ProjectForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     return (
         <Form {...form}> {/* the form provider */}
-            <section className="space-y-10">
+            <section className="space-y-10 ">
             <form onSubmit={form.handleSubmit(onSubmit)} className={cn("relative border p-4 pt-1 rounded-xl bg-sidebar dark:bg-sidebar transition-all", isFocused && "shadow-xs", showUsage && "rounded-t-none")}> {/* html form */}
                 <FormField
                     control={form.control}
@@ -125,13 +125,11 @@ export const  ProjectForm = () => {
             </form>
 
             {/* exmaple templates to build from */}
-            <div className="flex-wrap justify-center gap-2 hidden md:flex max-w-3xl">
+            <div className="flex justify-center gap-2">
                 {PROJECT_TEMPLATES.map((template)=>(
                     <Button key={template.title} variant="outline" size="sm" className="bg-white dark:bg-sidebar" onClick={()=>onSelect(template.prompt)}>
                         {template.emoji}
-                    </Button>
-
-                    
+                    </Button>       
                 ))}
             </div>
         
