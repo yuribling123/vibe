@@ -43,6 +43,9 @@ inngest.send() → triggers background function
 ### note 
 Background jobs let user run slow AI work without blocking the user request.
 
+theme/assets: cwa.run/vibe-assets 
+cwa.run/vibe-tweak
+
 
 ### update 5/19
 
