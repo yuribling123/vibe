@@ -26,6 +26,8 @@ e2b template build --name vibe-nextjs-test-2 --cmd "/compile_page.sh"
 ## Run database studio
 npx prisma studio
 
+## Authentication using Clerk
+
 ## update
 use ingest's kit for background jobs and ai agent 
 use TRPC as the bridge to safe type call backend functions from frontend
