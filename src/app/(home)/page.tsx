@@ -7,15 +7,19 @@ import { useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
-import { ProjectForm } from "@/modules/home/ui/project-form";
+
 import ProjectList from "@/modules/home/ui/components/projects-list";
+import { ProjectForm } from "@/modules/home/ui/components/project-form";
+import NavBar from "@/modules/home/ui/components/navbar";
 
 const Page = () => {  
   
   return ( 
     
     <div className="flex flex-col max-w-5xl mx-auto w-full">
+   
       <section className="space-y-6 py-[16vh] 2xl:py-48">
+       
 
         <div className="flex flex-col items-center">
                     <Image src="/logo.svg" alt="Logo" width={50} height={50} className="hidden md:block"/>
