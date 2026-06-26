@@ -36,7 +36,7 @@ use e2b to build container with template envirornment
 
 React (client)
    ↓
-tRPC mutation  → small backend handler
+tRPC mutation  → small backend handler (interact with prisma database)
    ↓
 inngest.send() → triggers background function
                      ↓
