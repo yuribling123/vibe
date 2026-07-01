@@ -1,11 +1,16 @@
+import {auth} from '@clerk/nextjs/server';
 import { initTRPC } from '@trpc/server';
 import { cache } from 'react';
 import superjson from 'superjson';
 
+// secure trppc
 export const createTrpcContext = cache( async() => {
 
-    return {userId:'user123'};  
+    return {auth: await auth()};  
+
 })
+
+export type Context = Awaited<ReturnType<typeof createTrpcContext>>;
  
 /**
  * Initialization of tRPC backend
