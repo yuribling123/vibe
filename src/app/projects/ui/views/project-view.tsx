@@ -15,9 +15,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CodeView from "../code-view";
 import FileExplorer from "../components/file-explorer";
+import UserControl from "@/components/ui/user-control";
 
 interface Props {
-  projectId: string;
+  projectId: string; 
 }
 
 // get all messages for this project id
@@ -65,6 +66,7 @@ const ProjectView = ({ projectId }: Props) => {
                 <Button asChild size="sm" variant="default">
                   <Link href="/pricing"><CrownIcon /> upgrade </Link>
                 </Button>
+                <UserControl/>
               </div>
             </div>
             {/* the tab for preview */}
