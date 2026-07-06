@@ -42,6 +42,8 @@ inngest.send() → triggers background function
                      ↓
                  AI runs here
 
+clerk: the middleware to protect authorized routes; also use trpc backend points to proctect all authorized routes (data access layer )
+
 ### note 
 Background jobs let user run slow AI work without blocking the user request.
 

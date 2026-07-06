@@ -14,6 +14,7 @@ import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { PROJECT_TEMPLATES } from "../../constants";
+import { useClerk } from "@clerk/nextjs";
 
 
 
@@ -25,6 +26,7 @@ const formScheme = z.object({
 })
 
 export const ProjectForm = () => {
+    const clerk = useClerk() 
     // to naviagate a diff page
     const router = useRouter();
     // create the form object
@@ -51,6 +53,10 @@ export const ProjectForm = () => {
                 router.push(`/projects/${data.id}`)
             },
             onError: (error) => {
+                if (error.data?.code==="UNAUTHORIZED") {     
+                    clerk.openSignIn() // open the clerk sign in modal if user is not logged in
+                }
+
                toast.error(error.message);
             }
         }

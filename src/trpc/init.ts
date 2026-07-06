@@ -6,12 +6,12 @@ import superjson from 'superjson';
 
 // all trpc procedures will have access to this clerk authorization
 export const createTrpcContext = cache( async() => {
-
     return {auth: await auth()};  
 
 })
 
 export type Context = Awaited<ReturnType<typeof createTrpcContext>>;
+
  
 /**
  * Initialization of tRPC backend
