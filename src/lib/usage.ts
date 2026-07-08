@@ -1,5 +1,8 @@
 import { RateLimiterPrisma } from "rate-limiter-flexible"
 import prisma from "./db"
+import { auth } from "@clerk/nextjs/server";
+
+const GENERATION_COST = 1; // cost of generating one image
 
 export async function getUsageTracker() {
 
@@ -13,5 +16,26 @@ export async function getUsageTracker() {
     )
 
     return usageTracker
+}
+
+export async function consumeCredits(){
+    const {userId} = await auth();
+    if (!userId){
+        throw new Error("User not authenticated")
+    }
+    const usageTracker = await getUsageTracker();
+    const result = await usageTracker.consume(userId,GENERATION_COST)
+    return result
+}
+
+export async function getUsageStatus(){
+
+    const {userId} = await auth();
+    if (!userId){
+        throw new Error("User not authenticated")
+    }
+    const UsageTracker = await getUsageTracker();
+    const result = await UsageTracker.get(userId)
+    return result
 
 }
