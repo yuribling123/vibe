@@ -4,38 +4,39 @@ import { protectedProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
 import { generateSlug } from "random-word-slugs";
 import { TRPCError } from "@trpc/server";
+import { consumeCredits } from "@/lib/usage";
 
 // create a new project with first message and trigger the ai agent job
 export const projectRouter = createTRPCRouter({
   // get a project by id, include messages
-  getOne:protectedProcedure
+  getOne: protectedProcedure
     .input(
       z.object({
         id: z.string().min(1, { message: "Project ID is required" })
       })
     )
-    .query(async ({ ctx,input }) => {
+    .query(async ({ ctx, input }) => {
       const project = await prisma.project.findUnique({
         where: {
           id: input.id,
-          userId:ctx.auth.userId
+          userId: ctx.auth.userId
         },
-        include:{
-          messages:true
+        include: {
+          messages: true
         }
       });
-      if(!project){
-        throw new TRPCError({code:"NOT_FOUND",message:"Project not found"})
+      if (!project) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Project not found" })
       }
-      return project 
-    }), 
+      return project
+    }),
   // get all projects from the database
   getMany: protectedProcedure
-    .query(async ({ctx}) => { 
+    .query(async ({ ctx }) => {
       const projects = await prisma.project.findMany({
-        where:{
+        where: {
           userId: ctx.auth.userId
-        }, 
+        },
         orderBy: {
           updatedAt: "asc"
         },
@@ -49,7 +50,23 @@ export const projectRouter = createTRPCRouter({
 
       })
     )
-    .mutation(async ({ ctx,input }) => {
+    .mutation(async ({ ctx, input }) => {
+
+      // check credit limits
+      try {
+        await consumeCredits()
+      }
+      catch (error) {
+        if (error instanceof Error) {
+
+          throw new TRPCError({ code: "BAD_REQUEST", message: error.message })
+        }
+        else {
+          throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "No more credits" })
+        }
+
+      }
+
       const createdProject = await prisma.project.create({
         data: {
           userId: ctx.auth.userId,

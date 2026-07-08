@@ -4,6 +4,7 @@ import { protectedProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
 import { generateSlug } from "random-word-slugs";
 import { TRPCBuilder, TRPCError } from "@trpc/server";
+import { consumeCredits } from "@/lib/usage";
 // add a new message in the exisiting project and trigger the ai agent job
 // (1) read from the DB (2)update the DB
 // validate input -> save in database -> trigger job -> return response
@@ -51,6 +52,22 @@ export const messageRouter = createTRPCRouter({
           message: "Project not found",
         });
       }
+
+      // check credit limits
+      try{
+        await consumeCredits()
+      }
+      catch(error){
+        if(error instanceof Error){
+
+          throw new TRPCError({code:"BAD_REQUEST",message:error.message})
+        }
+        else{
+          throw new TRPCError({code:"TOO_MANY_REQUESTS",message:"No more credits"})
+        }
+
+      }
+
 
       const createdMessage = await prisma.message.create({
         data: {

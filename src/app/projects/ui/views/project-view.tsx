@@ -16,6 +16,7 @@ import Link from "next/link";
 import CodeView from "../code-view";
 import FileExplorer from "../components/file-explorer";
 import UserControl from "@/components/ui/user-control";
+import { useAuth } from "@clerk/nextjs";
 
 interface Props {
   projectId: string; 
@@ -27,7 +28,8 @@ const ProjectView = ({ projectId }: Props) => {
   const [activeFragment, setActiveFragment] = useState<Fragment | null>(null);
   const trpc = useTRPC();
   const [tabState, setTabState] = useState<"preview" | "code">("preview");
-
+  const {has} = useAuth();
+  const hasProAccess = has({plan:"pro"})
   // resizable panel by dragging
   return (
     <div className="h-screen">
@@ -63,9 +65,10 @@ const ProjectView = ({ projectId }: Props) => {
                 </TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-x-2">
-                <Button asChild size="sm" variant="default">
+                {!!hasProAccess &&<Button asChild size="sm" variant="default">
                   <Link href="/pricing"><CrownIcon /> upgrade </Link>
-                </Button>
+                </Button>}
+             
                 <UserControl/>
               </div>
             </div>

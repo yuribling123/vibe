@@ -50,12 +50,20 @@ export const ProjectForm = () => {
             onSuccess: (data) => {
                 // invalidate the old projects list cache and refetch later
                 queryClient.invalidateQueries(trpc.projects.getMany.queryOptions())
+                queryClient.invalidateQueries(trpc.usage.status.queryOptions())
                 router.push(`/projects/${data.id}`)
-            },
+            }, 
             onError: (error) => {
                 if (error.data?.code==="UNAUTHORIZED") {     
                     clerk.openSignIn() // open the clerk sign in modal if user is not logged in
                 }
+
+                //not enough credits
+
+                if (error.data?.code == "TOO_MANY_REQUESTS") 
+                    {
+                        router.push("/pricing")
+                    }
 
                toast.error(error.message);
             }

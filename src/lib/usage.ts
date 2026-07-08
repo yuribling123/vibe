@@ -3,14 +3,20 @@ import prisma from "./db"
 import { auth } from "@clerk/nextjs/server";
 
 const GENERATION_COST = 1; // cost of generating one image
+const PRO_POINTS = 100
 
 export async function getUsageTracker() {
+    const {has}  = await auth();
+    const hasProAccess = has({plan:"pro"})
+
+
+
 
     const usageTracker = new RateLimiterPrisma(
         {
             storeClient: prisma,
             tableName: "Usage",
-            points:5,
+            points: hasProAccess ? PRO_POINTS : 5,
             duration:30*24*60*60, // 30 days
         }
     )
