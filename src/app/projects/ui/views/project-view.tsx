@@ -17,6 +17,7 @@ import CodeView from "../code-view";
 import FileExplorer from "../components/file-explorer";
 import UserControl from "@/components/ui/user-control";
 import { useAuth } from "@clerk/nextjs";
+import { ErrorBoundary } from "react-error-boundary";
 
 interface Props {
   projectId: string; 
@@ -40,13 +41,19 @@ const ProjectView = ({ projectId }: Props) => {
 
         {/* the panel that contains the project header and the user conversations*/}
         <ResizablePanel defaultSize={35} minSize={20} className="flex flex-col min-h-0">
+
+          <ErrorBoundary fallback={<p>Project header error</p>}>
           <Suspense fallback={<div>Loading project header...</div>} >
             <ProjectHeader projectId={projectId} />
           </Suspense>
+          </ErrorBoundary>
 
+          <ErrorBoundary fallback={<p>Message error</p>}>
           <Suspense fallback={<div>Loading messages...</div>} >
             <MessageContainer projectId={projectId} activeFragment={activeFragment} setActiveFragment={setActiveFragment} />
           </Suspense>
+          </ErrorBoundary>
+
         </ResizablePanel>
 
 

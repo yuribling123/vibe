@@ -4,6 +4,7 @@ import { formatDuration, intervalToDuration } from "date-fns";
 import { CrownIcon } from "lucide-react";
 
 import Link from "next/link";
+import { useMemo } from "react";
 
 interface Props {
     points: number;
@@ -13,6 +14,25 @@ interface Props {
 const Usage = ({ points, msBeforeNext }: Props) => {
     const { has } = useAuth();
     const hasProAccess = has({ plan: "pro" })
+    const resetTime = useMemo(() => {
+        try {
+            return formatDuration(
+                intervalToDuration({
+                    start: new Date(),
+                    end: new Date(Date.now() + msBeforeNext),
+                }),
+                { format: ["months", "days", "hours", "minutes", "seconds"] }
+            )
+
+        }
+        catch (error) {
+            console.error(error)
+            return "soon"
+
+        }
+
+    }, [msBeforeNext])
+
     return (
         <div className="rounded-t-xl bg-background border border-b-0 p-2.5">
 
@@ -28,16 +48,8 @@ const Usage = ({ points, msBeforeNext }: Props) => {
 
                     <p className="text-xs text-muted-foreground">
 
-                        Reset in {""}
-                        {
-                            formatDuration(
-                                intervalToDuration({
-                                    start: new Date(),
-                                    end: new Date(Date.now() + msBeforeNext),
-                                }),
-                                { format: ["months", "days", "hours","minutes","seconds"] }
-                            )
-                        }
+                        Reset in {""}{resetTime}
+                    
 
                     </p>
 

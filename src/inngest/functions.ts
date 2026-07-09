@@ -39,6 +39,8 @@ export const codeAgentFunction = inngest.createFunction(
       // Get sandbox id from e2b
       const sandboxId = await step.run("get-sandbox-id", async () => {
         const sandbox = await Sandbox.create("vibe-nextjs-test-2");
+        // increase duration of sandbox  (30 minutes)
+        await sandbox.setTimeout(60_000*10*3)
         return sandbox.sandboxId;
       });
 
@@ -54,8 +56,9 @@ export const codeAgentFunction = inngest.createFunction(
             projectId: event.data.projectId,
           },
           orderBy: {
-            createdAt: "asc",
+            createdAt: "desc",
           },
+          take:5
         });
 
         for (const message of messages) {
@@ -67,7 +70,7 @@ export const codeAgentFunction = inngest.createFunction(
           });
         }
 
-        return formattedMessages;       
+        return formattedMessages.reverse();       
 
       })
 
@@ -96,7 +99,7 @@ export const codeAgentFunction = inngest.createFunction(
         // terminal tool, read file tool, write file tool 
         tools: [
           // Terminal tool to run commands in the sandbox
-          createTool({
+          createTool({  
             name: "Terminal",
             description: "Use the terminal to run commands",
             parameters: z.object({ command: z.string() }),
