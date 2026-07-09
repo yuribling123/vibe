@@ -14,7 +14,7 @@ import { Agent, openai, createAgent, createTool, createNetwork, Tool, createStat
 import { Sandbox } from "@e2b/code-interpreter";
 import { getSandbox, lastAssistantTextMessageContent } from "./utils"
 import { z } from "zod";
-import { PROMPT } from "@/prompt";
+import { PROMPT, FRAGMENT_TITLE_PROMPT, RESPONSE_PROMPT } from "@/prompt";
 import prisma from "@/lib/db";
 import { is } from "date-fns/locale";  
 import { Message } from "@inngest/agent-kit"
@@ -207,7 +207,7 @@ export const codeAgentFunction = inngest.createFunction(
         {
           name:"fragment-title-generator",
           description: "a fragment title generator",
-          system: PROMPT,
+          system: FRAGMENT_TITLE_PROMPT,
           model:openai({model:"gpt-4o"}),
         }
       )
@@ -217,7 +217,7 @@ export const codeAgentFunction = inngest.createFunction(
         {
           name:"response-generator",
           description: "a response generator",
-          system: PROMPT,
+          system: RESPONSE_PROMPT ,
           model:openai({model:"gpt-4o"}),
         }
       )
