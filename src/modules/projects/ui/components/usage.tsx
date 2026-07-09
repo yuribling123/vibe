@@ -33,11 +33,10 @@ const Usage = ({ points, msBeforeNext }: Props) => {
                             formatDuration(
                                 intervalToDuration({
                                     start: new Date(),
-                                    end: new Date(Date.now() + msBeforeNext)
+                                    end: new Date(Date.now() + msBeforeNext),
                                 }),
-                                { format: ["months", "days", "hours"] }
+                                { format: ["months", "days", "hours","minutes","seconds"] }
                             )
-
                         }
 
                     </p>
