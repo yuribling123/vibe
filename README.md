@@ -44,6 +44,8 @@ inngest.send() → triggers background function
 
 clerk: the middleware to protect authorized routes; also use trpc backend points to proctect all authorized routes (data access layer )
 
+May use Vercel to Deploy in the future
+
 ### note 
 Background jobs let user run slow AI work without blocking the user request.
 
@@ -77,3 +79,7 @@ summary of how the app workds
 
 
 ![alt text](image-1.png)
+
+
+
+### update 7/9 project finished 
