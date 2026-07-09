@@ -17,186 +17,205 @@ import { z } from "zod";
 import { PROMPT } from "@/prompt";
 import prisma from "@/lib/db";
 import { is } from "date-fns/locale";
-interface AgentState{
-  summary:string;
-  files:{[path:string]:string}
-} 
+interface AgentState {
+  summary: string;
+  files: { [path: string]: string }
+}
 
 export const codeAgentFunction = inngest.createFunction(
-  { id: "code-agent",
-   triggers:{event:"code-agent/run"},
+  {
+    id: "code-agent",
+    triggers: { event: "code-agent/run" },
   },
   async ({ event, step }) => {
+    try {
 
-    // Get sandbox id from e2b
-    const sandboxId = await step.run("get-sandbox-id", async () => {
-      const sandbox = await Sandbox.create("vibe-nextjs-test-2");
-      return sandbox.sandboxId;
-    });
+      // Get sandbox id from e2b
+      const sandboxId = await step.run("get-sandbox-id", async () => {
+        const sandbox = await Sandbox.create("vibe-nextjs-test-2");
+        return sandbox.sandboxId;
+      });
 
-    // Create an agent with our written custmoized prompt, model, and tool to write in remote sandbox
-    const codeAgent = createAgent<AgentState>({
+      // Create an agent with our written custmoized prompt, model, and tool to write in remote sandbox
+      const codeAgent = createAgent<AgentState>({
 
-      name: "code-agent",
-      description: "an expert coding",
-      system: PROMPT,
-      model: openai({
-        model: "gpt-5.2",
-        defaultParameters: {
-          temperature: 0.1,
-        }
-      }),
-      // terminal tool, read file tool, write file tool 
-      tools: [
-        // Terminal tool to run commands in the sandbox
-        createTool({
-          name: "Terminal",
-          description: "Use the terminal to run commands",
-          parameters: z.object({ command: z.string() }),
-          handler: async ({ command }, { step }) => {
-            return await step?.run("terminal", async () => {
-              const buffers = { stdout: "", stderr: "" };
-              try {
-                const sandbox = await getSandbox(sandboxId);
-                const result = await sandbox.commands.run(command, {
-                  onStdout: (data: string) => {
-                    buffers.stdout += data;
-                  },
-                  onStderr: (data: string) => {
-                    buffers.stderr += data;
-                  }
-                });
-                return result.stdout;
-              }
-              catch (e) {
-                console.error(`command failed: ${e} \n stdout: ${buffers.stdout} \n stderr: ${buffers.stderr}`);
-              }
-            })
+        name: "code-agent",
+        description: "an expert coding",
+        system: PROMPT,
+        model: openai({
+          model: "gpt-5.2",
+          defaultParameters: {
+            temperature: 0.1,
           }
-
         }),
-
-        // Create or update file tool to create or update files in the sandbox
-        createTool({
-          name: "createOrUpdateFile",
-          description: "Create or update files in the sandbox",
-          parameters: z.object({
-            files: z.array(z.object({ path: z.string(), content: z.string() })),
-          }),
-          handler: async ({ files }, { step, network }:Tool.Options<AgentState>) => {
-            const newFiles = await step?.run("createOrUpdateFiles", async () => {
-              try {
-                const updatedFiles = network.state.data.files || {};
-                const sandbox = await getSandbox(sandboxId);
-                for (const file of files) {
-                  await sandbox.files.write(file.path, file.content);
-                  updatedFiles[file.path] = file.content;
+        // terminal tool, read file tool, write file tool 
+        tools: [
+          // Terminal tool to run commands in the sandbox
+          createTool({
+            name: "Terminal",
+            description: "Use the terminal to run commands",
+            parameters: z.object({ command: z.string() }),
+            handler: async ({ command }, { step }) => {
+              return await step?.run("terminal", async () => {
+                const buffers = { stdout: "", stderr: "" };
+                try {
+                  const sandbox = await getSandbox(sandboxId);
+                  const result = await sandbox.commands.run(command, {
+                    onStdout: (data: string) => {
+                      buffers.stdout += data;
+                    },
+                    onStderr: (data: string) => {
+                      buffers.stderr += data;
+                    }
+                  });
+                  return result.stdout;
                 }
-                return updatedFiles;
-
-              } catch (e) {
-                return "error:" + e;
-              }
-            });
-            if (typeof newFiles === "object") {
-              network.state.data.files = newFiles;
+                catch (e) {
+                  console.error(`command failed: ${e} \n stdout: ${buffers.stdout} \n stderr: ${buffers.stderr}`);
+                }
+              })
             }
-          },
-        }),
-        // Read file tool to read files from the sandbox
-        createTool({
-          name: "readFiles",
-          description: "Read files from the sandbox",
-          parameters: z.object({
-            files: z.array(z.string()),
+
           }),
-          handler: async ({ files }, { step }) => {
-            return await step?.run("readFiles", async () => {
-              try {
-                const sandbox = await getSandbox(sandboxId);
-                const contents = [];
-                for (const file of files) {
-                  const content = await sandbox.files.read(file);
-                  contents.push({ path: file, content: content });
+
+          // Create or update file tool to create or update files in the sandbox
+          createTool({
+            name: "createOrUpdateFile",
+            description: "Create or update files in the sandbox",
+            parameters: z.object({
+              files: z.array(z.object({ path: z.string(), content: z.string() })),
+            }),
+            handler: async ({ files }, { step, network }: Tool.Options<AgentState>) => {
+              const newFiles = await step?.run("createOrUpdateFiles", async () => {
+                try {
+                  const updatedFiles = network.state.data.files || {};
+                  const sandbox = await getSandbox(sandboxId);
+                  for (const file of files) {
+                    await sandbox.files.write(file.path, file.content);
+                    updatedFiles[file.path] = file.content;
+                  }
+                  return updatedFiles;
+
+                } catch (e) {
+                  return "error:" + e;
                 }
-                return JSON.stringify(contents);
+              });
+              if (typeof newFiles === "object") {
+                network.state.data.files = newFiles;
               }
-              catch (e) {
-                return "error: " + e;
-              }
-            });
-          },
-        })
+            },
+          }),
+          // Read file tool to read files from the sandbox
+          createTool({
+            name: "readFiles",
+            description: "Read files from the sandbox",
+            parameters: z.object({
+              files: z.array(z.string()),
+            }),
+            handler: async ({ files }, { step }) => {
+              return await step?.run("readFiles", async () => {
+                try {
+                  const sandbox = await getSandbox(sandboxId);
+                  const contents = [];
+                  for (const file of files) {
+                    const content = await sandbox.files.read(file);
+                    contents.push({ path: file, content: content });
+                  }
+                  return JSON.stringify(contents);
+                }
+                catch (e) {
+                  return "error: " + e;
+                }
+              });
+            },
+          })
 
 
-      ],
-      lifecycle: {
-        onResponse: async ({ result, network }) => {
-          const lastAssistantMessageText = lastAssistantTextMessageContent(result)
-          if (lastAssistantMessageText?.includes("<task_summary>") && network) {
-            network.state.data.summary = lastAssistantMessageText
+        ],
+        lifecycle: {
+          onResponse: async ({ result, network }) => {
+            const lastAssistantMessageText = lastAssistantTextMessageContent(result)
+            if (lastAssistantMessageText?.includes("<task_summary>") && network) {
+              network.state.data.summary = lastAssistantMessageText
+            }
+            return result
           }
-          return result
         }
-      }
 
-    });
+      });
 
-    const network = createNetwork<AgentState>(
-      {
-        name: "coding-agent-network",
-        agents: [codeAgent],
-        maxIter: 9,
-        router: async ({ network }) => { const summary = network.state.data.summary; if (summary) { return } return codeAgent }
-      }
-    )
-
-
-    // Run the code agent with the input prompt and get the output
-    const result = await network.run(event.data.value);
-    const isError = !result.state.data.summary || Object.keys(result.state.data.files || {}).length === 0;
+      const network = createNetwork<AgentState>(
+        {
+          name: "coding-agent-network",
+          agents: [codeAgent],
+          maxIter: 2,
+          router: async ({ network }) => { const summary = network.state.data.summary; if (summary) { return } return codeAgent }
+        }
+      )
 
 
-    // Get the sandbox URL 
-    const sandboxUrl = await step.run("get-sandbox-url", async () => {
-      const sandbox = await getSandbox(sandboxId);
+      // Run the code agent with the input prompt and get the output
+      const result = await network.run(event.data.value);
+      const isError = !result.state.data.summary || Object.keys(result.state.data.files || {}).length === 0;
 
-      const host = sandbox.getHost(3000);
 
-      return `https://${host}`;
-    });
-    // save sandox url and the result to the database
-    await step.run("save-result", async () => {
-      if (isError){
+      // Get the sandbox URL 
+      const sandboxUrl = await step.run("get-sandbox-url", async () => {
+        const sandbox = await getSandbox(sandboxId);
+
+        const host = sandbox.getHost(3000);
+
+        return `https://${host}`;
+      });
+      // save sandbox url and the result to the database
+      await step.run("save-result", async () => {
+        if (isError) {
+          return await prisma.message.create({
+            data: {
+              projectId: event.data.projectId,
+              content: "Error occurred while processing the request.",
+              role: "ASSISTANT",
+              type: "ERROR"
+            }
+          });
+        }
+        // Here you can save the result to a database or do something else with it
         return await prisma.message.create({
           data: {
             projectId: event.data.projectId,
-            content: "Error occurred while processing the request.",
+            content: result.state.data.summary,
             role: "ASSISTANT",
-            type: "ERROR"
-          }
-        });
-      }
-      // Here you can save the result to a database or do something else with it
-      return await prisma.message.create({
+            type: "RESULT",
+            fragment: {
+              create: {
+                sandboxUrl: sandboxUrl,
+                title: "Fragment",
+                files: result.state.data.files
+              }
+            }
+
+          },
+
+        })
+      });
+
+      return { result, sandboxUrl };
+    }
+    catch (error) {
+
+      await prisma.message.create({
         data: {
           projectId: event.data.projectId,
-          content: result.state.data.summary,
-          role:"ASSISTANT",
-          type:"RESULT",
-          fragment:{
-            create:{
-              sandboxUrl: sandboxUrl,
-              title:"Fragment",
-              files:result.state.data.files
-            }
-          }
-
+          content: "Sorry, something went wrong. Please try again.",
+          role: "ASSISTANT",
+          type: "ERROR",
         },
-         
-      })
-    });
+      });
 
-    return { result, sandboxUrl };
+      // Re-throw so Inngest still marks the run as Failed
+      throw error;
+
+
+    }
   },
 ); 
