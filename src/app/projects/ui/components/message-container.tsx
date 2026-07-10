@@ -18,7 +18,7 @@ const MessageContainer = ({ projectId, activeFragment, setActiveFragment }: Prop
     const lastAssistantMessageIdRef = useRef<string | null>(null); // store the last assistant message id
     const trpc = useTRPC();
     const { data: messages } = useSuspenseQuery(
-        trpc.messages.getMany.queryOptions({ projectId: projectId }, {refetchInterval:5000}) // "real time" updates (polling)
+        trpc.messages.getMany.queryOptions({ projectId: projectId }, {refetchInterval:2000}) // "real time" updates (polling)
     
     );
     console.log("messages", messages);

@@ -32,6 +32,7 @@ export const codeAgentFunction = inngest.createFunction(
   {
     id: "code-agent",
     triggers: { event: "code-agent/run" },
+    retries: 1
   },
   async ({ event, step }) => {
     try {
@@ -197,7 +198,7 @@ export const codeAgentFunction = inngest.createFunction(
           defaultState:state,
           name: "coding-agent-network",
           agents: [codeAgent],
-          maxIter: 2,
+          maxIter: 6,
           router: async ({ network }) => { const summary = network.state.data.summary; if (summary) { return } return codeAgent }
         }
       )
