@@ -83,3 +83,7 @@ summary of how the app workds
 
 
 ### update 7/9 project finished 
+1.add user subsrciptions feature
+2.agent can now memorize previous conversations
+3.fragment title with summary -> preview the app + all the code files
+
