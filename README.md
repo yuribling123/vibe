@@ -87,3 +87,5 @@ summary of how the app workds
 2.agent can now memorize previous conversations
 3.fragment title with summary -> preview the app + all the code files
 
+![alt text](image-2.png)
+
