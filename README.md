@@ -8,7 +8,6 @@ First, run the development server:
 
 ```bash
 npm run dev
-
 ```
 ## Test Background Job Server
 
@@ -17,14 +16,17 @@ npx inngest-cli@latest dev
 ```
 
 ## Run container template
-```
+
+```bash
 e2b template build --name vibe-nextjs-test-2 --cmd "/compile_page.sh"
 ```
 
 
 
 ## Run database studio
+```bash
 npx prisma studio
+```
 
 ## Authentication using Clerk
 
@@ -55,7 +57,7 @@ cwa.run/vibe-tweak
 
 ### update 5/19
 
-summary of how the app workds
+summary of how the app works
 
 
 1. Inngest receives the event: "code-agent/run"
@@ -83,7 +85,7 @@ summary of how the app workds
 
 
 ### update 7/9 project finished 
-1.add user subsrciptions feature
+1.add user login and subsrciptions feature
 2.agent can now memorize previous conversations
 3.fragment title with summary -> preview the app + all the code files
 
