@@ -9,7 +9,7 @@ First, run the development server:
 ```bash
 npm run dev
 ```
-## Test Background Job Server
+## Start Background Job Server
 
 ```bash
 npx inngest-cli@latest dev
